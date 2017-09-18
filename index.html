@@ -1,0 +1,793 @@
+<html style="font-size: 50px;"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <!-- 控制浏览器缓存 -->
+    <meta http-equiv="Cache-Control" content="no-store">
+    <title>赞赞买单体验店</title>
+    <style type="text/css">
+        * {margin: 0;padding: 0;}
+        h1, h2, h3, h4, h5, h6, strong {font-weight: normal;}
+        a {text-decoration: none;}
+        ul, ol, li {list-style: none;}
+        input {-webkit-appearance: none;}
+        html {
+            background: #f8f8f8;
+            /*-moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;*/
+            -webkit-touch-callout: none;
+            font-family: "黑体", "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+        /*body{position: relative;}*/
+        b {font-weight: normal;}
+        i, em {font-style: normal;}
+        img {-webkit-user-select: none;}
+
+        .error {
+            color: #f8f8f8
+        }
+        .fl {
+            float: left;
+        }
+        .fr {
+            float: right !important;
+        }
+        .clearfix:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .dblock {
+            display: block;
+        }
+        /*
+            基本样式
+         */
+        .db-float-left {
+            float: left !important;
+        }
+
+        .db-float-right {
+            float: right !important;
+        }
+
+        .db-back-white {
+            background: #FFFFFF !important;
+        }
+        /*
+            头部
+         */
+        .header {
+            padding: .3rem 0 .3rem .24rem;
+            overflow: hidden;
+        }
+        .icon-shop {
+            width: .65rem;
+            height: .6rem;
+        }
+        .shop-name {
+            max-width: 5.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: .39rem;
+            height: .6rem;
+            line-height: .6rem;
+        }
+        /*
+            支付金额
+         */
+        .payment {
+            position: relative;
+            background: #fff;
+            padding: .65rem .22rem .68rem;
+            margin-bottom: .25rem;
+        }
+        .payment h4 {
+            max-width: 5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: absolute;
+            left: 1.5rem;
+            top: 0.4rem;
+        }
+        .blackcat {
+            overflow: hidden;
+            position: absolute;
+            top: .28rem;
+            left: .23rem;
+        }
+        .blackcat img {
+            display: block;
+            width: 1.14rem;
+            height: .84rem;
+        }
+        .payment-cont {
+            padding-left: 0.27rem;
+            padding-right: 0.24rem;
+            height: 1.94rem;
+            border: 0.03rem solid #1aad19;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #1aad19;
+            overflow: hidden;
+        }
+        .payment-cont p {
+            font-size: 0.34rem;
+            height: 1.94rem;
+            line-height: 1.94rem;
+        }
+        .payment-cont .payment-cont-icon, .payment-cont .payment-cont-num {
+            font-size: 0.68rem;
+        }
+        .payment-center .payment-cont-num {
+            font-size: 1rem
+        }
+        .payment-cont-icon {
+            width: 0.72rem;
+        }
+        .payment-cont-icon span {
+            float: left;
+            line-height: 1.94rem;
+            font-weight: lighter;
+        }
+        #marker {
+            line-height: 1.94rem;
+        }
+        /*
+            选择优惠券
+         */
+        .wxpay-bar i {
+            background: none;
+        }
+        .wxpay-bar span {
+            color: #1aad19;
+        }
+        /*更新*/
+        .radio-selected span b {
+            color: #faab02;
+        }
+        .radio-selected span {
+            color: #1aad19;
+        }
+        /*
+            输入键盘
+         */
+        .keybord-box {
+            width: 100%;
+            position: fixed;
+            bottom: -4.9rem;
+            left: 0px;
+        }
+        .support-box {
+            height: 0.26rem;
+            padding: 0 0.3rem;
+            margin-bottom: 0.2rem;
+        }
+        .keybord {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .keybord td {
+            width: 25%;
+            height: 0.99rem;
+            line-height: 0.99rem;
+            text-align: center;
+            font-size: 0.54rem;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+            border: 1px solid #f3eeee;
+        }
+        .keybord .keybord-back, .keybord .keybord-down {
+            line-height: 0;
+        }
+        .keybord-back img {
+            width: .72rem;
+            height: .5rem;
+        }
+        .keybord-back {
+            background: #fff url("data:image/png;base64,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") no-repeat;
+            background-position: top center;
+            background-size: 34% 2rem;
+        }
+        .retract {
+            background: #fff url("data:image/png;base64,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") no-repeat;
+            background-position: bottom center;
+            background-size: 34% 1.8rem;
+        }
+        .keybord .makesure {
+            height: 75%;
+            line-height: .7rem;
+            background: #d7d3d4;
+            color: #ffffff;
+        }
+        /*确认支付可以点击时微信和京东的不同状态*/
+        .keybord .canClick {
+            background: #1aad19;
+        }
+        .keybord .makesure span {
+            display: block;
+        }
+        .keybord-down img {
+            width: .48rem;
+            height: .48rem;
+        }
+        .mj-support {
+            color: #dbd8d8;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .payment-discount {
+            display: block;
+            float: right !important;
+            font-weight: lighter;
+        }
+        .tickets{
+            height: .86rem;
+            background: #fff;
+        }
+
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100%;
+            font-size: .32rem;
+            color: #1c1b21;
+        }
+        /*卡券选择页面*/
+        .cardWrapper{
+            width: 100%;
+            height: 100%;
+            background: red;
+            position: absolute;
+            top: 0;
+            left: 100%;
+        }
+    </style>
+<link href="http://pay.zanzanmd.cn/resources/weui/weui.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+    <form method="POST" id="payForm" style="display: none;">
+        <input type="hidden" id="amount" name="orderAmount" value="">
+        <input type="hidden" id="merchantDiscount" name="merchantDiscount" value="9.95">
+        <input type="hidden" id="transactionPrice" name="transactionPrice" value="">
+        <input type="hidden" id="platformTransactionAmount" name="platformTransactionAmount" value="">
+        <input type="hidden" id="qrcode" name="qrcode" value="521e7c5ec59411e689b4008cfa047934">
+        <input type="hidden" id="openid" name="openid" value="oXlYlwPLqlwtUN1ej8FyVMLPyLHw">
+    </form>
+    <!-- 金额显示栏 -->
+    <div class="payment db-back-white">
+        <div class="payment-cont">
+            <span class="cursor-blink"></span>
+            <p class="payment-cont-word db-float-left">消费金额</p>
+            <p class="payment-cont-num db-float-right"></p>
+            <p class="payment-cont-icon db-float-right"><span>¥</span><span id="marker" style="display: block; color: rgb(255, 255, 255);">|</span>
+            </p>
+        </div>
+    </div>
+    <!-- 优惠价格 -->
+    <div class="tickets">
+
+    </div>
+    <!-- 输入键盘 -->
+    <div class="keybord-box" style="bottom: 0px;">
+        <div class="support-box">
+            <div class="mj-support">由赞赞买单提供技术支持</div>
+        </div>
+        <table class="keybord db-back-white">
+            <tbody>
+            <tr>
+                <td name="number" class="border-top">1</td>
+                <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">2</td>
+                <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">3</td>
+                <td class="border-left keybord-back border-top" style="background-color: rgb(255, 255, 255);"></td>
+            </tr>
+            <tr>
+                <td name="number" class="border-top">4</td>
+                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">5</td>
+                <td name="number" class="border-top border-left">6</td>
+
+                <td class="border-top border-left makesure " id="lastpay" rowspan="3">
+                    <span>确认</span>
+                    <span>支付</span>
+                </td>
+
+            </tr>
+            <tr>
+                <td name="number" class="border-top">7</td>
+                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">8</td>
+                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">9</td>
+            </tr>
+            <tr>
+                <td name="number" class="retract border-top"></td>
+                <td name="number" class="border-top">0</td>
+                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class = 'cardWrapper'>
+    
+</div>
+
+
+<div id="loadingToast" style="display:none;">
+    <div class="weui-mask"></div>
+    <div class="weui-toast">
+        <i class="weui-loading weui-icon_toast"></i>
+        <p class="weui-toast__content" id="toast_msg"></p>
+    </div>
+</div>
+<div style="display: none;" id="mydailg">
+    <div class="weui-mask"></div>
+    <div class="weui-dialog">
+        <div class="weui-dialog__hd"><strong class="weui-dialog__title" id=""></strong></div>
+        <div class="weui-dialog__bd"></div>
+        <div class="weui-dialog__ft">
+            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+        </div>
+    </div>
+</div>
+<!-- 支付成功-->
+<div id="toastsuccess" style="display: none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+        <p class="weui-toast__content">已完成</p>
+    </div>
+</div>
+</body>
+<script>
+    'use strict'
+    const baseUrl = "http://pay.qdxiao2.com"
+    const dlb = {
+        byName: name => document.getElementsByName(name),
+        byId: id => document.getElementById(id),
+        byQs: ele => document.querySelector(ele),
+        byQsa: eles => document.querySelectorAll(eles),
+        show: obj => obj.style.display = 'block',
+        hide: obj => obj.style.display = 'none',
+        isNumeric: num => !!Number(num),
+        //判断是否是整数
+        isInt: num => num % 1 == 0 ? parseInt(num) : Number(num).toFixed(1),
+        //事件监听
+        addEvent: (obj, sEv, fn) => obj.addEventListener ? obj.addEventListener(sEv, fn, false) : obj.attachEvent('on' + sEv, fn),
+        removeEvent: (obj, sEv, fn) => obj.removeEventListener ? obj.removeEventListener(sEv, fn, false) : obj.detachEvent('on' + sEv, fn),
+        //增加className
+        addClass: (obj, sClass) => {
+            if (obj.className) {
+                var reg = new RegExp('\\b' + sClass + '\\b', 'g')
+                if (obj.className.search(reg) == -1) {
+                    obj.className += ' ' + sClass
+                }
+            } else {
+                obj.className = sClass
+            }
+        },
+        //删除className
+        removeClass: (obj, sClass) => {
+            if (obj.className) {
+                var reg = new RegExp('\\b' + sClass + '\\b', 'g')
+                if (obj.className.search(reg) != -1) {
+                    obj.className = obj.className.replace(reg, '').replace(/^\s+|\s+$/, ' ').replace(/\s+/g, ' ')
+                    if (!obj.className) {
+                        obj.removeAttribute("class")
+                    }
+                }
+            }
+        },
+        //查看是否有这个class名，有就返回true否则返回false
+        hasClass: (obj, cls) => {
+            var obj_class = obj.className,              //获取 class 内容.
+                obj_class_lst = obj_class.split(/\s+/)     //通过split空字符将cls转换成数组.
+            var x = 0
+            for (x in obj_class_lst) {
+                if (obj_class_lst[x] == cls) {          //循环数组, 判断是否包含cls
+                    return true
+                }
+            }
+            return false
+        },
+        //清除所有iclass
+        clear: (item, iclass) => {
+            for(let i in item)
+                dlb.removeClass(item[i], iclass)
+        },
+        //ajax函数 封装
+        json2url: json => {
+            let arr = []
+            for (let name in json) {
+                arr.push(name + '=' + encodeURIComponent(json[name]))
+            }
+            return arr.join('&')
+        },
+        ajax: json => {
+            var timer = null
+            json = json || {}
+            if (!json.url)return
+            json.data = json.data || {}
+            json.type = json.type || 'get'
+            json.timeout = json.timeout || 8000
+
+            if (window.XMLHttpRequest) {
+                var oAjax = new XMLHttpRequest()
+            } else {
+                var oAjax = new ActiveXObject('Microsoft.XMLHTTP')
+            }
+
+            switch (json.type.toLowerCase()) {
+                case 'get':
+                    oAjax.open('GET', json.url + '?' + dlb.json2url(json.data), true)
+                    oAjax.send()
+                    break
+                case 'post':
+                    oAjax.open('POST', json.url, true)
+                    oAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+                    oAjax.send(dlb.json2url(json.data))
+                    break
+            }
+            oAjax.onreadystatechange = function () {
+                if (oAjax.readyState == 4) {
+                    clearTimeout(timer)
+                    if (oAjax.status >= 200 && oAjax.status < 300 || oAjax.status == 304) {
+                        json.success && json.success(oAjax.responseText)
+                    } else {
+                        json.error && json.error(oAjax.status)
+                    }
+                }
+                timer = setTimeout(function () {
+                    if (oAjax.readyState != 4) {
+                        clearTimeout(timer)
+                        json.error && json.error()
+                    }
+                }, json.timeout)
+            }
+        },
+        jsonp: json => {
+            json = json || {}
+            if (!json.url)return
+            json.cbName = json.cbName || 'cb'
+            json.data = json.data || {}
+
+            json.data[json.cbName] = 'show' + Math.random()
+            json.data[json.cbName] = json.data[json.cbName].replace('.', '')
+
+            var arr = []
+            for (var i in json.data) {
+                arr.push(i + '=' + encodeURIComponent(json.data[i]))
+            }
+            var str = arr.join('&')
+
+            window[json.data[json.cbName]] = function (result) {
+                json.success && json.success(result)
+                oH.removeChild(oS)
+                window[json.data[json.cbName]] = null
+            }
+            var oH = document.getElementsByTagName('head')[0]
+            var oS = document.createElement('script')
+            oS.src = json.url + '?' + str
+            oH.appendChild(oS)
+            oS.onerror = function () {
+                window[json.data[json.cbName]] = null
+                oH.removeChild(oS)
+                json.error && json.error()
+            }
+        }
+    }
+
+
+    const keybord = {
+        //获取键盘内容
+        getCon: obj => obj.innerHTML,
+        //触摸键盘时颜色改变
+        changeBc: obj => {
+            obj.style.backgroundColor = '#eee'
+            var _obj = obj
+            setTimeout(function () {
+                _obj.style.backgroundColor = '#fff'
+            }, 30)
+        },
+        //键盘收起
+        slideDown: box => {
+            var oF = box.offsetHeight
+            var timer = null
+            var h = 0
+            timer = setInterval(function () {
+                h += 10
+                if (h >= oF) {
+                    h = oF
+                    clearInterval(timer)
+                }
+                box.parentNode.style.bottom = -h + 'px'
+            }, 5)
+        },
+        //键盘弹出
+        slideUp: (box, pos) => {
+            var oF = box.offsetHeight
+            var timer = null
+            var h = -oF
+            timer = setInterval(function () {
+                h += 10
+                if (h >= 0) {
+                    h = 0
+                    clearInterval(timer)
+                }
+                box.parentNode.style.bottom = h + 'px'
+            }, 5)
+            dlb.removeEvent(pos, 'click', toUp)
+        },
+        //键盘点击输入
+        input: (am, item) => {
+            var num = keybord.getCon(item)
+            var newAm
+            //判断输入金额在小数点前五位、小数点后两位
+            if ((am == null || am == '') && num == '.') {
+                newAm = "0" + num
+            } else if (am == null || am == '') {
+                newAm = num
+            } else if (num == '.' && am.indexOf(".") > 0) {
+                newAm = am
+            } else if (num == '0' && am.indexOf(".") < 0 && am.indexOf("0") == 0) {
+                newAm = am
+            } else if (num == '.' && am.indexOf(".") < 0 && parseInt(am) < 50000) {
+                newAm = am + num
+            } else if (am.indexOf(".") > 0 && (am.length - am.indexOf(".")) > 2) {
+                newAm = am
+            } else if (am.length > 8) {
+                newAm = am
+            } else if (am == '0' && num != '.') {
+                newAm = num
+            } else if (am.indexOf(".") < 0 && parseInt(am) == 5000 && num != '0') {
+                newAm = am
+            } else if (am.indexOf(".") < 0 && parseInt(am) > 5000) {
+                newAm = am
+            } else if (am.indexOf(".") < 0 && parseInt(am) <= 50000 && am.length >= 5 && num != '.') {
+                newAm = am
+            } else {
+                newAm = am + num
+            }
+            return newAm
+        }
+    }
+    const showToast = msg => {
+        !msg ? msg = "数据加载中" : null
+        dlb.byId("toast_msg").innerHTML = msg
+        dlb.show(dlb.byId("loadingToast"))
+    }
+
+    const hideToast = _ => dlb.hide(dlb.byId("loadingToast"))
+
+    const showDialog = title => dlb.show(dlb.byId("mydailg"))
+
+    const showToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
+
+    const hideToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
+
+    //输入金额临界值触发的事件
+    const speFunOpen = _ => {
+        dlb.byId("marker").style.display = "none"
+        if (parseFloat(dlb.byId("amount").value)) {
+            dlb.addClass(dlb.byId("lastpay"), "canClick")
+        }
+    }
+
+    const readPayment = amount => {
+        dlb.byId("transactionPrice").value = amount || 0
+        var originalamount = amount
+        var merchantDiscount = dlb.byId("merchantDiscount").value
+        var amount = calamount(amount, merchantDiscount)
+        if (amount) {
+            dlb.byId("platformTransactionAmount").value = amount
+            dlb.byId("readPayment").innerHTML = "实付金额:&nbsp" + amount + "&nbsp元"
+            dlb.byId("randomReduction").innerHTML = "随机立减:&nbsp " + (Number(originalamount-amount) <= 0 ? 0:Number(originalamount-amount)).toFixed(2)+"&nbsp元"
+        } else {
+            if(dlb.isNumeric(amount)){
+                if(amount<= 0){
+                    amount = 0.01
+                }
+                dlb.byId("readPayment").innerHTML = "实付金额:&nbsp" + amount + "&nbsp元"
+                dlb.byId("randomReduction").innerHTML = "随机立减:&nbsp " + (Number(originalamount-amount) <= 0 ? 0:Number(originalamount-amount)).toFixed(2)+"&nbsp元"
+
+                dlb.byId("platformTransactionAmount").value = amount
+            }else{
+                dlb.byId("readPayment").innerHTML = ""
+                dlb.byId("randomReduction").innerHTML = ""
+
+                dlb.byId("platformTransactionAmount").value = 0
+            }
+
+        }
+    }
+    //输入金额函数
+    function inputing(e) {
+        var oPayNum = dlb.byQs('.payment-cont-num')
+        var amount = dlb.byId("amount").value
+        var num = this.innerHTML
+        var newAmount = keybord.input(amount, this)
+        dlb.byId("amount").value = newAmount
+        oPayNum.innerHTML = newAmount
+        speFunOpen()
+       if(dlb.isNumeric(newAmount) && newAmount>0){
+            readPayment(Number(newAmount))
+       }
+
+        e.preventDefault()
+    }
+
+    //按下退格键函数
+    const backClick = e => {
+        e.preventDefault()
+        var amount = dlb.byId("amount").value
+        var newAmount
+        if (amount == null || amount == '') {
+            return
+        } else {
+            newAmount = amount.substring(0, amount.length - 1)
+        }
+        dlb.byId("amount").value = newAmount
+        dlb.byQs('.payment-cont-num').innerHTML = newAmount
+        if(dlb.isNumeric(amount) && newAmount>0) {
+            readPayment(newAmount)
+        }else{
+            dlb.byId("readPayment").innerHTML = ""
+            dlb.byId("randomReduction").innerHTML = ""
+
+            dlb.byId("platformTransactionAmount").value = 0
+        }
+        speFunEnd()     //输入金额临界值触发的事件
+    }
+
+    //键盘弹出函数
+    const toUp = _ => {
+        if (dlb.byQs('.recommend-list') && parseInt(dlb.byQs('.recommend-list').style.bottom) == 0) {
+            recommend.toHide(dlb.byQs('.recommend-list'))
+        }
+        keybord.slideUp(dlb.byQs('.keybord'), dlb.byQs('.payment-cont'))
+        speFunEnd()
+    }
+
+    
+    const speFunEnd = _ => {
+        if (parseFloat(dlb.byId("amount").value) == 0) {
+            dlb.removeClass(dlb.byId("lastpay"), "canClick")
+        } else if (dlb.byId("amount").value == '') {
+            dlb.byId("marker").style.display = "block"
+            dlb.removeClass(dlb.byId("lastpay"), "canClick")
+        }
+    }
+
+    //计算金额 o:原价 d:折扣
+    const calamount = (o, d) => parseFloat( (parseFloat(o) * d / 10).toFixed(2) )
+
+    const wechatApliy = _ => {
+        showToast(null)
+        var amount = dlb.byId("platformTransactionAmount").value
+        var openid = dlb.byId("openid").value
+        var qrcode = dlb.byId("qrcode").value
+        var transactionPrice = dlb.byId("transactionPrice").value
+        dlb.ajax({
+            url: baseUrl + "/pay/rest/createOrder",
+            data: {
+                "qrcode": qrcode,
+                "openid": openid,
+                "amount": amount,
+                "transactionPriceTwo": transactionPrice
+            },
+            type: 'post',
+            timeout: 8000,
+            success: data => {
+                if (data.httpCode == 200) {
+                    var appId = data.payInfo.appId
+                    var timeStamp = data.payInfo.timeStamp
+                    var nonceStr = data.payInfo.nonceStr
+                    var package1 = data.payInfo.package
+                    var signType = data.payInfo.signType
+                    var paySign = data.payInfo.paySign
+                    onBridgeReady(appId, timeStamp, nonceStr, package1, signType, paySign)
+                } else {
+                    hideToast()
+                }
+            }
+        })
+    }
+
+    const onBridgeReady = (appId, timeStamp, nonceStr, package1, signType, paySign) => {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId": appId,     //公众号名称，由商户传入
+                "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数
+                "nonceStr": nonceStr, //随机串
+                "package": package1,
+                "signType": signType,         //微信签名方式：
+                "paySign": paySign//微信签名
+            }, function (res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    toFollowPage()
+                    hideToast()
+                } else {
+                    hideToast()
+                }
+            }
+        )
+    }
+    
+    const toFollowPage = _ => window.location = baseUrl+"/follow"
+
+    //光标调用
+    setInterval((_ => {
+        let n = 1
+        return _ => {
+            dlb.byId("marker").style.color = n % 2 === 0 ? "#333333" : "#ffffff"
+            n++
+        }
+    })(), 580)
+    //初始化金额
+    dlb.byQs('.payment-cont-num').innerHTML = ''
+    dlb.byId("amount").value = ''
+
+    //监听触摸键盘事件
+    const oBack = dlb.byQs('.keybord-back')
+    for(let numEle of dlb.byName('number')){
+        //键盘触摸的时候颜色变化
+        dlb.addEvent(numEle, 'touchstart', function (e) {
+            keybord.changeBc(this)
+            e.preventDefault()
+        })
+        //键盘触摸抬起的时候输入值
+        dlb.addEvent(numEle, 'touchend', inputing)
+    }
+    //按下退格键颜色变化
+    dlb.addEvent(oBack, 'touchstart', function (e) {
+        keybord.changeBc(this)
+        e.preventDefault()
+    })
+    //按下退格按钮
+    dlb.addEvent(oBack, 'touchend', backClick)
+
+    //当页面文档加载完成之后弹出键盘
+    dlb.addEvent(document, 'DOMContentLoaded', _ => {
+        var html = document.documentElement
+        var windowWidth = html.clientWidth
+        html.style.fontSize = windowWidth / 7.5 + 'px'
+        // 等价于html.style.fontSize = windowWidth / 640 * 100 + 'px'
+        toUp()
+    })
+    //    /键盘收起按钮按下颜色变化
+    dlb.addEvent(dlb.byQs('.retract'), 'touchstart', function (e) {
+        keybord.changeBc(this)
+        e.preventDefault()
+    })
+    //点击键盘收起按钮，键盘收起
+    dlb.addEvent(dlb.byQs('.retract'), 'touchend', function () {
+        keybord.slideDown(dlb.byQs('.keybord'))
+        dlb.addEvent(dlb.byQs('.payment-cont'), 'click', toUp)
+    })
+    dlb.addEvent(dlb.byId('lastpay'), 'click', _ => wechatApliy())
+
+
+    // const switchMove = (ele, speed) => dlb.byQs(`.${ele}`).style.left = dlb.byQs(`.${ele}`).offsetLeft - speed + 'px'
+    // let moveInterval = setInterval(_ => {
+    //     let speed = document.body.clientWidth / 60
+    //     switchMove('container', speed)
+    //     switchMove('keybord-box', speed)
+    //     switchMove('cardWrapper', speed)
+    //     if(-dlb.byQs('.container').offsetLeft >= document.body.clientWidth)
+    //         clearInterval(moveInterval)
+    // }, 1)
+
+</script>
+</html>
