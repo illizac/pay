@@ -5,17 +5,20 @@
 <meta http-equiv="Cache-Control" content="no-store">
 <title>赞赞买单体验店</title>
 <link href="http://pay.zanzanmd.cn/resources/weui/weui.min.css" rel="stylesheet" type="text/css">
-<link href="./css/main.css" rel="stylesheet" type="text/css">
+<link href="/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
     <form method="POST" id="payForm" style="display: none;">
         <input type="hidden" id="amount" name="orderAmount" value="">
-        <input type="hidden" id="merchantDiscount" name="merchantDiscount" value="9.95">
+        <input type="hidden" id="merchantDiscount" name="merchantDiscount" value="10">
         <input type="hidden" id="transactionPrice" name="transactionPrice" value="">
         <input type="hidden" id="platformTransactionAmount" name="platformTransactionAmount" value="">
-        <input type="hidden" id="qrcode" name="qrcode" value="521e7c5ec59411e689b4008cfa047934">
-        <input type="hidden" id="openid" name="openid" value="oXlYlwPLqlwtUN1ej8FyVMLPyLHw">
+        <input type="hidden" id="couponReceiveSum" name="couponReceiveSum" value="0">
+        <input type="hidden" id="cpCouponReceiveId" name="cpCouponReceiveId" value="0">
+        <input type="hidden" id="shop" name="shop" value="">
+        <input type="hidden" id="qrcode" name="qrcode" value="">
+        <input type="hidden" id="openid" name="openid" value="">
     </form>
     <!-- 金额显示栏 -->
     <div class="payment db-back-white">
@@ -28,11 +31,17 @@
         </div>
     </div>
     <!-- 优惠价格 -->
-    <div class="tickets">
-        <img src='./img/youhui@3x.png' class='ticketyouhui'>
-        <span class='content'>商家优惠</span>
-        <img src='./img/enter@3x.png' class='enter'/>
-    </div>
+     <ul class="tickets">
+        <li class="tickets-detial tickets-existed radio-selected">
+            <span id="readPayment"></span>
+            <span class="payment-discount" id="randomReduction"></span>
+        </li>
+        <li class="choose">
+            <img src='/img/youhui@3x.png' class='ticketyouhui'>
+            <span class='content'>商家优惠</span>
+            <img src='/img/enter@3x.png' class='enter'/>
+        </li>
+    </ul>
     <!-- 输入键盘 -->
     <div class="keybord-box" style="bottom: 0px;">
         <div class="support-box">
@@ -72,9 +81,12 @@
     </div>
 </div>
 
-
 <div class = 'cardWrapper'>
     <ul class='cardContainer'>
+        <li class='cardNone'>
+            <span>不使用优惠券</span>
+            <div class='img'></div>
+        </li>
     </ul>
 </div>
 
@@ -105,7 +117,8 @@
     </div>
 </div>
 </body>
-<script src="./js/base.js"></script>
-<script src="./js/api.js"></script>
-<script src="./js/index.js"></script>
+<script src="/bower_components/crypto-js/crypto-js.js"></script>
+<script src="/js/base.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/index.js"></script>
 </html>

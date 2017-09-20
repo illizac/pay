@@ -60,6 +60,7 @@ const dlb = {
         }
         return arr.join('&')
     },
+    // data, type, timeout, url, success, error
     ajax: json => {
         var timer = null
         json = json || {}
@@ -73,7 +74,6 @@ const dlb = {
         } else {
             var oAjax = new ActiveXObject('Microsoft.XMLHTTP')
         }
-
         switch (json.type.toLowerCase()) {
             case 'get':
                 oAjax.open('GET', json.url + '?' + dlb.json2url(json.data), true)
@@ -81,7 +81,7 @@ const dlb = {
                 break
             case 'post':
                 oAjax.open('POST', json.url, true)
-                oAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+                oAjax.setRequestHeader('Content-Type', json.header || 'application/x-www-form-urlencoded')
                 oAjax.send(dlb.json2url(json.data))
                 break
         }

@@ -226,7 +226,8 @@ body{
     float: right !important;
     font-weight: lighter;
 }
-.tickets{
+.choose{
+    margin-top: .24rem;
     height: .86rem;
     background: #fff;
     display: flex;
@@ -234,19 +235,48 @@ body{
     padding: 0 .34rem;
     align-items: center;
 }
-.tickets .ticketyouhui{
+.choose .ticketyouhui{
     width: .44rem;
     height: .44rem;
 }
-.tickets .content{
+.choose .content{
     font-size: .3rem;
     color: #333;
     padding-left: .28rem;
     flex: 1;
 }
-.tickets .enter{
+.choose .enter{
     width: .22rem;
     height: .32rem;
+}
+.tickets-detial {
+    height: .86rem;
+    overflow: hidden;
+    padding: 0 .22rem;
+    line-height: 0.96rem;
+    border-bottom: 1px solid #f8f8f8;
+    background: #fff;
+}
+
+.tickets-detial i, .voucher-detial i, .wxpay-bar i {
+    width: 0.32rem;
+    height: 0.32rem;
+    float: left;
+    background: url("https://style.duolabao.cn/order/img/wxpay/radio.png") no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
+    margin-right: 0.1rem;
+    margin-top: 0.31rem;
+}
+
+.tickets-detial span, .voucher-detial span {
+    float: left;
+    font-size: 0.3rem;
+}
+
+.tickets-detial span:nth-child(3), .voucher-detial span:nth-child(4) {
+    font-size: 0.3rem;
+    color: #b4b4b4;
 }
 
 
@@ -286,11 +316,11 @@ body{
 .cardWrapper li .img{
     width: .34rem;
     height: .34rem;
-    background: url('../img/delete_pre@3x.png') no-repeat;
+    background: url('/img/delete_pre@3x.png') no-repeat;
     background-size: .34rem .34rem;
 }
 .cardWrapper li:active .img{
-    background: url('../img/delete@3x.png') no-repeat;
+    background: url('/img/delete@3x.png') no-repeat;
     background-size: .34rem .34rem;
 }
 .cardWrapper .cardNone{

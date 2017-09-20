@@ -11,7 +11,7 @@ var server = (router, handle) => {
 	var func = (req, res) => {
 		var pathname = url.parse(req.url).pathname
 		
-		pathname = pathname === '/' ? '/index.html' : pathname
+		pathname = pathname === '/pay/pay/pay.html' ? '/index.html' : pathname
 
 		//parse param
 		var paramStr = url.parse(req.url).query

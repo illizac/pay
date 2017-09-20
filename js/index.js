@@ -1,153 +1,4 @@
 'use strict'
-const showToast = msg => {
-    !msg ? msg = "数据加载中" : null
-    dlb.byId("toast_msg").innerHTML = msg
-    dlb.show(dlb.byId("loadingToast"))
-}
-
-const hideToast = _ => dlb.hide(dlb.byId("loadingToast"))
-
-const showDialog = title => dlb.show(dlb.byId("mydailg"))
-
-const showToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
-
-const hideToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
-
-//输入金额临界值触发的事件
-const speFunOpen = _ => {
-    dlb.byId("marker").style.display = "none"
-    if (parseFloat(dlb.byId("amount").value)) {
-        dlb.addClass(dlb.byId("lastpay"), "canClick")
-    }
-}
-
-const readPayment = amount => {
-    dlb.byId("transactionPrice").value = amount || 0
-    var originalamount = amount
-    var merchantDiscount = dlb.byId("merchantDiscount").value
-    var amount = calamount(amount, merchantDiscount)
-    if (amount) {
-        dlb.byId("platformTransactionAmount").value = amount
-    } else {
-        if(dlb.isNumeric(amount)){
-            if(amount<= 0){
-                amount = 0.01
-            }
-            dlb.byId("platformTransactionAmount").value = amount
-        }else{
-            dlb.byId("platformTransactionAmount").value = 0
-        }
-
-    }
-}
-//输入金额函数
-function inputing(e) {
-    var oPayNum = dlb.byQs('.payment-cont-num')
-    var amount = dlb.byId("amount").value
-    var num = this.innerHTML
-    var newAmount = keybord.input(amount, this)
-    dlb.byId("amount").value = newAmount
-    oPayNum.innerHTML = newAmount
-    speFunOpen()
-   if(dlb.isNumeric(newAmount) && newAmount>0){
-        readPayment(Number(newAmount))
-   }
-
-    e.preventDefault()
-}
-
-//按下退格键函数
-const backClick = e => {
-    e.preventDefault()
-    var amount = dlb.byId("amount").value
-    var newAmount
-    if (amount == null || amount == '') {
-        return
-    } else {
-        newAmount = amount.substring(0, amount.length - 1)
-    }
-    dlb.byId("amount").value = newAmount
-    dlb.byQs('.payment-cont-num').innerHTML = newAmount
-    dlb.isNumeric(amount) && newAmount>0 ? readPayment(newAmount) : dlb.byId("platformTransactionAmount").value = 0
-    speFunEnd()     //输入金额临界值触发的事件
-}
-
-//键盘弹出函数
-const toUp = _ => {
-    if (dlb.byQs('.recommend-list') && parseInt(dlb.byQs('.recommend-list').style.bottom) == 0) {
-        recommend.toHide(dlb.byQs('.recommend-list'))
-    }
-    keybord.slideUp(dlb.byQs('.keybord'), dlb.byQs('.payment-cont'))
-    speFunEnd()
-}
-
-
-const speFunEnd = _ => {
-    if (parseFloat(dlb.byId("amount").value) == 0) {
-        dlb.removeClass(dlb.byId("lastpay"), "canClick")
-    } else if (dlb.byId("amount").value == '') {
-        dlb.byId("marker").style.display = "block"
-        dlb.removeClass(dlb.byId("lastpay"), "canClick")
-    }
-}
-
-//计算金额 o:原价 d:折扣
-const calamount = (o, d) => parseFloat( (parseFloat(o) * d / 10).toFixed(2) )
-
-const wechatApliy = _ => {
-    showToast(null)
-    var amount = dlb.byId("platformTransactionAmount").value
-    var openid = dlb.byId("openid").value
-    var qrcode = dlb.byId("qrcode").value
-    var transactionPrice = dlb.byId("transactionPrice").value
-    dlb.ajax({
-        url: baseUrl + "/pay/rest/createOrder",
-        data: {
-            "qrcode": qrcode,
-            "openid": openid,
-            "amount": amount,
-            "transactionPriceTwo": transactionPrice
-        },
-        type: 'post',
-        timeout: 8000,
-        success: data => {
-            if (data.httpCode == 200) {
-                var appId = data.payInfo.appId
-                var timeStamp = data.payInfo.timeStamp
-                var nonceStr = data.payInfo.nonceStr
-                var package1 = data.payInfo.package
-                var signType = data.payInfo.signType
-                var paySign = data.payInfo.paySign
-                onBridgeReady(appId, timeStamp, nonceStr, package1, signType, paySign)
-            } else {
-                hideToast()
-            }
-        }
-    })
-}
-
-const onBridgeReady = (appId, timeStamp, nonceStr, package1, signType, paySign) => {
-    WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', {
-            "appId": appId,     //公众号名称，由商户传入
-            "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数
-            "nonceStr": nonceStr, //随机串
-            "package": package1,
-            "signType": signType,         //微信签名方式：
-            "paySign": paySign//微信签名
-        }, function (res) {
-            if (res.err_msg == "get_brand_wcpay_request:ok") {
-                toFollowPage()
-                hideToast()
-            } else {
-                hideToast()
-            }
-        }
-    )
-}
-
-const toFollowPage = _ => window.location = baseUrl+"/follow"
-
 //光标调用
 setInterval((_ => {
     let n = 1
@@ -197,58 +48,135 @@ dlb.addEvent(dlb.byQs('.retract'), 'touchend', function () {
     keybord.slideDown(dlb.byQs('.keybord'))
     dlb.addEvent(dlb.byQs('.payment-cont'), 'click', toUp)
 })
+
 dlb.addEvent(dlb.byId('lastpay'), 'click', _ => wechatApliy())
 
 
 const switchMove = (ele, speed) => dlb.byQs(`.${ele}`).style.left = dlb.byQs(`.${ele}`).offsetLeft + speed + 'px'
 const movePage = state => {
-	let speed = document.body.clientWidth / 60 * (state && state === 'back' ? 1 : -1)
-	let moveInterval = setInterval(_ => {
-		let end = document.body.clientWidth
-	    let bl = state && state === 'back' ? dlb.byQs('.cardWrapper').offsetLeft : -dlb.byQs('.container').offsetLeft
-	    speed = speed > 1 && end-bl < 1 ? 1 : speed
-	    speed = (end - bl) < Math.abs(speed) ? speed < 0 ? bl - end : end - bl : speed
-	    switchMove('container', speed)
-	    switchMove('keybord-box', speed)
-	    switchMove('cardWrapper', speed)
-	    if(bl >= end)
-	        clearInterval(moveInterval)
+	let s, b, e, m
+	s = document.body.clientWidth / 60 * (state && state === 'back' ? 1 : -1)
+	m = setInterval(_ => {
+		e = document.body.clientWidth
+	    b = state && state === 'back' ? dlb.byQs('.cardWrapper').offsetLeft : -dlb.byQs('.container').offsetLeft
+	    s = s > 1 && e - b < 1 ? 1 : s
+	    s = (e - b) < Math.abs(s) ? s < 0 ? b - e : e - b : s
+	    switchMove('container', s)
+	    switchMove('keybord-box', s)
+	    switchMove('cardWrapper', s)
+	    if(b >= e)
+	        clearInterval(m)
 	}, 1)
 }
 const appendDom = (elem, domStr) => {
-	dlb.byQs(elem).innerHTML += domStr
+	dlb.byQs(elem).innerHTML = domStr
 }
+const saveCard = (e, type) => {
+	e = e || window.event
+	type == 'none' ? (
+		dlb.byId('couponReceiveSum').value = "0",
+		dlb.byId('cpCouponReceiveId').value = "0"
+	) : (
+		dlb.byId('couponReceiveSum').value = JSON.parse(dlb.byId('carddetail').innerHTML).count,
+		dlb.byId('cpCouponReceiveId').value = JSON.parse(dlb.byId('carddetail').innerHTML).id,
+		readPayment(dlb.byId('transactionPrice').value)
+	)
+	console.log(dlb.byId('cpCouponReceiveId').value)
+	movePage('back')
+}
+//-------------------------------------------------------------------------------------------//
+let p = location.search.substring(1, location.search.length).split('&').map(val => {
+	let o = {}, a
+	a = val.split('=')
+	o[a[0]] = a[1]
+	return o
+})
+let param = Object.assign(p[0], p[1])
+dlb.byId('openid').value = param.o
+dlb.byId('qrcode').value = param.q
 
-dlb.addEvent(dlb.byQs('.tickets'), 'click', movePage)
-let arr = [1,1,1,1,1,1,1,1,1,1,1,1,1]
-let html = `<li class='cardNone'>
-        <span>不使用优惠券</span>
-        <div class='img'></div>
-    </li>`
-for(let i in arr){
-	html += `<li class='cardItem'>
-        <div class='cardContent'>
-            <div class='cardCount'>
-                <p><span>¥</span>20</p>
-                <p>优惠券</p>
-            </div>
-            <div class='cardMess'>
-                <div>
-                    <p>店铺20元优惠券</p>
-                    <p>进店消费满100元可用</p>
-                </div>
-                <div class='img'></div>
-            </div>
-        </div>
-        <div class='cardBottom'>
-            <span>有效期： 2017-06-11 至 2017-07-28</span>
-            <span>未使用</span>
-        </div>
-    </li>`
-}
-appendDom('.cardContainer', html)
-dlb.addEvent(dlb.byQs('.cardNone'), 'click', _ => movePage('back'))
-for(let elem of dlb.byQsa('.cardItem')){
-	dlb.addEvent(elem, 'click', _ => movePage('back'))
-}
+Api.getShopInfo({
+	qrcode: param.q
+}).then(data => {
+	dlb.byId('readPayment').innerHTML = `店铺优惠： ${data.platformDiscount} 折`
+	dlb.byId("merchantDiscount").value = data.platformDiscount
+	dlb.byId("shop").value = JSON.stringify(data)
+})
+
+dlb.addEvent(dlb.byQs('.tickets'), 'click', _ => {
+	movePage()
+	Api.getcarddata(param).then(data => {
+		let html = `<li class='cardNone'>
+		        <span>不使用优惠券</span>
+		        <div class='img'></div>
+		    </li>`
+		for(let i of data.data || []){
+			let type = i.couponType === '1' ? '优惠券' : '红包'
+			html += dlb.byId('transactionPrice').value >= i.fullAmount ? `<li class='cardItem'>
+				<span id='carddetail' style="display: none;">${JSON.stringify({id: i.id, count: i.discountAmount})}</span>
+		        <div class='cardContent'>
+		            <div class='cardCount'>
+		                <p><span>¥</span>${i.discountAmount}</p>
+		                <p>${type}</p>
+		            </div>
+		            <div class='cardMess'>
+		                <div>
+		                    <p>店铺${i.discountAmount}元${type}</p>
+		                    <p>进店消费满${i.fullAmount}元可用</p>
+		                </div>
+		                <div class='img'></div>
+		            </div>
+		        </div>
+		        <div class='cardBottom'>
+		            <span>有效期： ${i.startDate.split(' ')[0]} 至 ${i.deadline.split(' ')[0]}</span>
+		            <span>未使用</span>
+		        </div>
+		    </li>` : ''
+		}
+		appendDom('.cardContainer', html)
+		dlb.addEvent(dlb.byQs('.cardNone'), 'click', e => {
+			e = e || window.event
+			saveCard(e, 'none')
+		})
+		for(let elem of dlb.byQsa('.cardItem')){
+			dlb.addEvent(elem, 'click', saveCard)
+		}
+	})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
