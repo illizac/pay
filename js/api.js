@@ -1,5 +1,5 @@
 const showToast = msg => {
-    !msg ? msg = "数据加载中" : null
+    msg = msg || "数据加载中"
     dlb.byId("toast_msg").innerHTML = msg
     dlb.show(dlb.byId("loadingToast"))
 }
@@ -131,19 +131,7 @@ const Api = (_ => {
 		createOrder: param => new Promise((rsl, rej) => {
 			showToast('支付中')
 			dlb.ajax(handleProxyPath(`/pay/rest/v1/createOrder`, data => rsl(data), param, 'post'))
-		}).then(data => {
-			if (data.httpCode == 200) {
-                let appId = data.payInfo.appId
-                let timeStamp = data.payInfo.timeStamp
-                let nonceStr = data.payInfo.nonceStr
-                let package1 = data.payInfo.package
-                let signType = data.payInfo.signType
-                let paySign = data.payInfo.paySign
-                onBridgeReady(appId, timeStamp, nonceStr, package1, signType, paySign)
-            } else {
-                hideToast()
-            }
-		})
+		}).then(data => JSON.parse(data))
 
 
 	}
@@ -152,7 +140,6 @@ const Api = (_ => {
 
 
 const wechatApliy = _ => {
-    showToast(null)
     let amount = dlb.byId("platformTransactionAmount").value
     let openId = dlb.byId("openid").value
     let qrcode = dlb.byId("qrcode").value
@@ -173,7 +160,7 @@ const wechatApliy = _ => {
 			discountAmount: amount,
 			cpCouponReceiveId,
 			isCouponReceiveId,
-			merchantId: shop.id,
+			id: shop.id,
 			goodName: shop.shopName,
         }
     let array = []
@@ -185,48 +172,28 @@ const wechatApliy = _ => {
     for (let i of array) {
         s += i
     }
-    console.log(s)
     let sercet = CryptoJS.SHA1(s).toString()
     o = Object.assign({}, o, {sercet})
 
-    Api.createOrder(o)
-    // dlb.ajax({
-    //     url: baseUrl + "/pay/rest/createOrder",
-    //     data: o,
-    //     type: 'post',
-    //     timeout: 8000,
-    //     success: data => {
-    //         if (data.httpCode == 200) {
-    //             let appId = data.payInfo.appId
-    //             let timeStamp = data.payInfo.timeStamp
-    //             let nonceStr = data.payInfo.nonceStr
-    //             let package1 = data.payInfo.package
-    //             let signType = data.payInfo.signType
-    //             let paySign = data.payInfo.paySign
-    //             onBridgeReady(appId, timeStamp, nonceStr, package1, signType, paySign)
-    //         } else {
-    //             hideToast()
-    //         }
-    //     }
-    // })
+    Api.createOrder(o).then(data => {
+		if (data.code == '200') {
+            onBridgeReady(data.data)
+        }
+        hideToast()
+	})
 }
 
-const onBridgeReady = (appId, timeStamp, nonceStr, package1, signType, paySign) => {
+const onBridgeReady = ({appId, timeStamp, nonceStr, package, signType, paySign}) => {
     WeixinJSBridge.invoke(
         'getBrandWCPayRequest', {
-            "appId": appId,     //公众号名称，由商户传入
-            "timeStamp": timeStamp,         //时间戳，自1970年以来的秒数
-            "nonceStr": nonceStr, //随机串
-            "package": package1,
-            "signType": signType,         //微信签名方式：
-            "paySign": paySign//微信签名
+            appId,     //公众号名称，由商户传入
+            timeStamp,         //时间戳，自1970年以来的秒数
+            nonceStr, //随机串
+            package,
+            signType,         //微信签名方式：
+            paySign//微信签名
         }, function (res) {
-            if (res.err_msg == "get_brand_wcpay_request:ok") {
-                toFollowPage()
-                hideToast()
-            } else {
-                hideToast()
-            }
+            toFollowPage()
         }
     )
 }
