@@ -29,7 +29,7 @@ exports.proxy = (res, param, header) => new Promise((reslove, reject) => {
 	delete param.type
 	delete param.path
 	path = method === 'POST' ? path : `${param.path}${getParamHandler(param)}`
-	req = http.request(Object.assign({}, opt, { method, path }, path === '/pay/rest/v1/createOrder' ? {headers: Object.assign({}, {'Content-Type' : 'application/json'})} : {}), res => {
+	req = http.request(Object.assign({}, opt, { method, path }, {headers: Object.assign({'user-agent': header['user-agent']}, path === '/pay/rest/v1/createOrder' ? {'Content-Type' : 'application/json'} : {})}), res => {
 			console.log("Got response: " + res.statusCode)
 			res.on('data', d => {
 			  	body += d

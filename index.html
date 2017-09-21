@@ -8,112 +8,113 @@
 <link href="/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="container">
-    <form method="POST" id="payForm" style="display: none;">
-        <input type="hidden" id="amount" name="orderAmount" value="">
-        <input type="hidden" id="merchantDiscount" name="merchantDiscount" value="10">
-        <input type="hidden" id="transactionPrice" name="transactionPrice" value="">
-        <input type="hidden" id="platformTransactionAmount" name="platformTransactionAmount" value="">
-        <input type="hidden" id="couponReceiveSum" name="couponReceiveSum" value="0">
-        <input type="hidden" id="cpCouponReceiveId" name="cpCouponReceiveId" value="0">
-        <input type="hidden" id="shop" name="shop" value="">
-        <input type="hidden" id="qrcode" name="qrcode" value="">
-        <input type="hidden" id="openid" name="openid" value="">
-    </form>
-    <!-- 金额显示栏 -->
-    <div class="payment db-back-white">
-        <div class="payment-cont">
-            <span class="cursor-blink"></span>
-            <p class="payment-cont-word db-float-left">消费金额</p>
-            <p class="payment-cont-num db-float-right"></p>
-            <p class="payment-cont-icon db-float-right"><span>¥</span><span id="marker" style="display: block; color: rgb(255, 255, 255);">|</span>
-            </p>
+<div class='page'>
+    <div id="loadingToast">
+        <div class="weui-mask"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content" id="toast_msg">加载中</p>
         </div>
     </div>
-    <!-- 优惠价格 -->
-     <ul class="tickets">
-        <li class="tickets-detial tickets-existed radio-selected">
-            <span id="readPayment"></span>
-            <span class="payment-discount" id="randomReduction"></span>
-        </li>
-        <li class="choose">
-            <img src='/img/youhui@3x.png' class='ticketyouhui'>
-            <span class='content'>商家优惠</span>
-            <img src='/img/enter@3x.png' class='enter'/>
-        </li>
-    </ul>
-    <!-- 输入键盘 -->
-    <div class="keybord-box" style="bottom: 0px;">
-        <div class="support-box">
-            <div class="mj-support">由赞赞买单提供技术支持</div>
-        </div>
-        <table class="keybord db-back-white">
-            <tbody>
-            <tr>
-                <td name="number" class="border-top">1</td>
-                <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">2</td>
-                <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">3</td>
-                <td class="border-left keybord-back border-top" style="background-color: rgb(255, 255, 255);"></td>
-            </tr>
-            <tr>
-                <td name="number" class="border-top">4</td>
-                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">5</td>
-                <td name="number" class="border-top border-left">6</td>
-
-                <td class="border-top border-left makesure " id="lastpay" rowspan="3">
-                    <span>确认</span>
-                    <span>支付</span>
-                </td>
-
-            </tr>
-            <tr>
-                <td name="number" class="border-top">7</td>
-                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">8</td>
-                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">9</td>
-            </tr>
-            <tr>
-                <td name="number" class="retract border-top"></td>
-                <td name="number" class="border-top">0</td>
-                <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">.</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class = 'cardWrapper'>
-    <ul class='cardContainer'>
-        <li class='cardNone'>
-            <span>不使用优惠券</span>
-            <div class='img'></div>
-        </li>
-    </ul>
-</div>
-
-
-<div id="loadingToast" style="display:none;">
-    <div class="weui-mask"></div>
-    <div class="weui-toast">
-        <i class="weui-loading weui-icon_toast"></i>
-        <p class="weui-toast__content" id="toast_msg"></p>
-    </div>
-</div>
-<div style="display: none;" id="mydailg">
-    <div class="weui-mask"></div>
-    <div class="weui-dialog">
-        <div class="weui-dialog__hd"><strong class="weui-dialog__title" id=""></strong></div>
-        <div class="weui-dialog__bd"></div>
-        <div class="weui-dialog__ft">
-            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+    <div style="display: none;" id="mydailg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title" id=""></strong></div>
+            <div class="weui-dialog__bd"></div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+            </div>
         </div>
     </div>
-</div>
-<!-- 支付成功-->
-<div id="toastsuccess" style="display: none;">
-    <div class="weui-mask_transparent"></div>
-    <div class="weui-toast">
-        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
-        <p class="weui-toast__content">已完成</p>
+    <!-- 支付成功-->
+    <div id="toastsuccess" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content">已完成</p>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="container">
+        <form method="POST" id="payForm" style="display: none;">
+            <input type="hidden" id="amount" name="orderAmount" value="">
+            <input type="hidden" id="merchantDiscount" name="merchantDiscount" value="10">
+            <input type="hidden" id="transactionPrice" name="transactionPrice" value="">
+            <input type="hidden" id="platformTransactionAmount" name="platformTransactionAmount" value="">
+            <input type="hidden" id="couponReceiveSum" name="couponReceiveSum" value="0">
+            <input type="hidden" id="cpCouponReceiveId" name="cpCouponReceiveId" value="0">
+            <input type="hidden" id="shop" name="shop" value="">
+            <input type="hidden" id="qrcode" name="qrcode" value="">
+            <input type="hidden" id="openid" name="openid" value="">
+        </form>
+        <!-- 金额显示栏 -->
+        <div class="payment db-back-white">
+            <div class="payment-cont">
+                <span class="cursor-blink"></span>
+                <p class="payment-cont-word db-float-left">消费金额</p>
+                <p class="payment-cont-num db-float-right"></p>
+                <p class="payment-cont-icon db-float-right"><span>¥</span><span id="marker" style="display: block; color: rgb(255, 255, 255);">|</span>
+                </p>
+            </div>
+        </div>
+        <!-- 优惠价格 -->
+         <ul class="tickets">
+            <li class="choose">
+                <img src='/img/youhui@3x.png' class='ticketyouhui'>
+                <span class='content'>商家优惠</span>
+                <img src='/img/enter@3x.png' class='enter'/>
+            </li>
+        </ul>
+        <!-- 输入键盘 -->
+        <div class="keybord-box" style="bottom: 0px;">
+            <div class="support-box">
+                <div class="mj-support">由赞赞买单提供技术支持</div>
+            </div>
+            <table class="keybord db-back-white">
+                <tbody>
+                <tr>
+                    <td name="number" class="border-top">1</td>
+                    <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">2</td>
+                    <td name="number" class="border-left border-top" style="background-color: rgb(255, 255, 255);">3</td>
+                    <td class="border-left keybord-back border-top" style="background-color: rgb(255, 255, 255);"></td>
+                </tr>
+                <tr>
+                    <td name="number" class="border-top">4</td>
+                    <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">5</td>
+                    <td name="number" class="border-top border-left">6</td>
+
+                    <td class="border-top border-left makesure " id="lastpay" rowspan="3">
+                        <span>确认</span>
+                        <span>支付</span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td name="number" class="border-top">7</td>
+                    <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">8</td>
+                    <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">9</td>
+                </tr>
+                <tr>
+                    <td name="number" class="retract border-top"></td>
+                    <td name="number" class="border-top">0</td>
+                    <td name="number" class="border-top border-left" style="background-color: rgb(255, 255, 255);">.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class = 'cardWrapper'>
+        <ul class='cardContainer'>
+            <li class='cardNone'>
+                <span>不使用优惠券</span>
+                <div class='img'></div>
+            </li>
+        </ul>
     </div>
 </div>
 </body>

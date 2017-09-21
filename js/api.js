@@ -27,15 +27,12 @@ function readPayment(amount) {
     var amount = calamount(amount, couponReceiveSum,  merchantDiscount)
     if (amount) {
         dlb.byId("platformTransactionAmount").value = amount
-        dlb.byId("randomReduction").innerHTML = "实付金额:&nbsp; " + amount
     } else {
         if($.isNumeric(amount)){
             if(amount<= 0){
                 amount = 0.01
             }
-            dlb.byId("randomReduction").innerHTML = "实付金额:&nbsp; " + amount
         }else{
-            dlb.byId("randomReduction").innerHTML = ""
             dlb.byId("platformTransactionAmount").value = 0
         }
 
@@ -109,11 +106,11 @@ const Api = (_ => {
 	api.prototype = {
 		IsWeixinOrAlipay: _ => {
 			let userAgent = navigator.userAgent.toLowerCase()
-			return userAgent.match(/MicroMessenger/i) == "micromessenger" ? 'wx' : userAgent.match(/Alipay/i) == "alipay" ? 'aliy' : 'none'
+			return userAgent.match(/MicroMessenger/i) == "micromessenger" ? 'wx' : userAgent.match(/Alipay/i) == "alipay" ? 'aliy' : null
 		},
 		//店铺信息
 		getShopInfo: param => new Promise((rsl, rej) => {
-			showToast('加载中')
+			// showToast('加载中')
 			dlb.ajax(handleProxyPath(`/sp/shop/v1/payShopInfo/${param.qrcode}`, data => rsl(data), {}, 'post'))
 		}).then(data => {
 			hideToast()
@@ -132,14 +129,45 @@ const Api = (_ => {
 			showToast('支付中')
 			dlb.ajax(handleProxyPath(`/pay/rest/v1/createOrder`, data => rsl(data), param, 'post'))
 		}).then(data => JSON.parse(data))
-
-
 	}
 	return new api()
 })()
 
+const switchMove = (ele, speed) => dlb.byQs(`.${ele}`).style.left = dlb.byQs(`.${ele}`).offsetLeft + speed + 'px'
+const movePage = state => {
+	let s, b, e, m
+	s = document.body.clientWidth / 60 * (state && state === 'back' ? 1 : -1)
+	m = setInterval(_ => {
+		e = document.body.clientWidth
+	    b = state && state === 'back' ? dlb.byQs('.cardWrapper').offsetLeft : -dlb.byQs('.container').offsetLeft
+	    s = s > 1 && e - b < 1 ? 1 : s
+	    s = (e - b) < Math.abs(s) ? s < 0 ? b - e : e - b : s
+	    switchMove('container', s)
+	    switchMove('keybord-box', s)
+	    switchMove('cardWrapper', s)
+	    if(b >= e)
+	        clearInterval(m)
+	}, 1)
+}
+const appendDom = (elem, domStr) => {
+	dlb.byQs(elem).innerHTML = domStr
+}
+const saveCard = (e, type) => {
+	e = e || window.event
+	type == 'none' ? (
+		dlb.byId('couponReceiveSum').value = "0",
+		dlb.byId('cpCouponReceiveId').value = "0"
+	) : (
+		dlb.byId('couponReceiveSum').value = JSON.parse(dlb.byId('carddetail').innerHTML).count,
+		dlb.byId('cpCouponReceiveId').value = JSON.parse(dlb.byId('carddetail').innerHTML).id,
+		readPayment(dlb.byId('transactionPrice').value)
+	)
+	console.log(dlb.byId('cpCouponReceiveId').value)
+	movePage('back')
+}
 
-const wechatApliy = _ => {
+
+const wechatApliy = _ => new Promise((rsl, rej) => {
     let amount = dlb.byId("platformTransactionAmount").value
     let openId = dlb.byId("openid").value
     let qrcode = dlb.byId("qrcode").value
@@ -174,16 +202,15 @@ const wechatApliy = _ => {
     }
     let sercet = CryptoJS.SHA1(s).toString()
     o = Object.assign({}, o, {sercet})
-
+    
     Api.createOrder(o).then(data => {
-		if (data.code == '200') {
-            onBridgeReady(data.data)
-        }
         hideToast()
+		if (data.code == '200')
+            rsl(data.data)
 	})
-}
+})
 
-const onBridgeReady = ({appId, timeStamp, nonceStr, package, signType, paySign}) => {
+const onBridgeReady = ({appId, timeStamp, nonceStr, package, signType, paySign}) => new Promise((rsl, rej) => {
     WeixinJSBridge.invoke(
         'getBrandWCPayRequest', {
             appId,     //公众号名称，由商户传入
@@ -193,12 +220,35 @@ const onBridgeReady = ({appId, timeStamp, nonceStr, package, signType, paySign})
             signType,         //微信签名方式：
             paySign//微信签名
         }, function (res) {
-            toFollowPage()
+        	rsl(res)
         }
     )
-}
+})
 
-const toFollowPage = _ => window.location = baseUrl+"/follow"
+const tradePay = tradeNO => new Promise((rsl, rej) => {
+    // 通过传入交易号唤起快捷调用方式(注意tradeNO大小写严格)
+    AlipayJSBridge.call("tradePay", {
+        tradeNO
+    }, function (data) {
+        if ("9000" == data.resultCode)
+        	rsl(data)
+    })
+})
+
+const successDom = ({all, cut}) => `<div class = 'success'>
+    <div class="successMess">
+        <div class='paymess'>
+            <img src="${successImg}" class='payimg'>
+            <p class='paytitle'>支付成功</p>
+            <p class='payfinall'>${cut} 元</p>
+            <p class='payprev' style='display: ${all == cut ? 'none' : 'block'}'>${all} 元</p>
+        </div>
+        <div class="shopCut" style='display: ${all == cut ? 'none' : 'block'}'>
+            <span>商家优惠</span>
+            <span class='cutnum'>-${cut-all}</span>
+        </div>
+    </div>
+</div>`
 
 
 

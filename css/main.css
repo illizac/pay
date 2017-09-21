@@ -12,6 +12,7 @@ html {
     user-select: none;*/
     -webkit-touch-callout: none;
     font-family: "黑体", "Helvetica Neue", Arial, Helvetica, sans-serif;
+    overflow: hidden;
 }
 b {font-weight: normal;}
 i, em {font-style: normal;}
@@ -19,9 +20,7 @@ img {-webkit-user-select: none;}
 body{
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
-
 .error {
     color: #f8f8f8
 }
@@ -279,15 +278,22 @@ body{
     color: #b4b4b4;
 }
 
-
+.page{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
 .container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     min-height: 100%;
     font-size: .32rem;
     color: #1c1b21;
+    overflow: hidden;
 }
 /*卡券选择页面*/
 .cardWrapper{
@@ -301,7 +307,6 @@ body{
     box-sizing: border-box;
 }
 .cardWrapper .cardContainer{
-    width: 100%;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -391,6 +396,58 @@ body{
 .cardWrapper .cardItem .cardContent .cardMess>div>p:nth-child(2){
     font-size: .28rem;
     color: rgb(83, 83, 83);
+}
+
+.success{
+    width: 100%;
+    height: 100%;
+    background: rgb(246,246,246);
+}
+.successMess{
+    height: 4.5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: .2rem;
+    background: #fff;
+    border-bottom: .01rem solid rgb(224, 224, 224);
+    font-size: .2rem;
+}
+.paymess{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.payimg{
+    width: .98rem;
+    height: .98rem;
+}
+.paytitle{
+    padding-top: .2rem;
+    color: rgb(54,176,88);
+    font-size: .3rem;
+}
+.payfinall{
+    padding-top: .22rem;
+    font-size: .38rem;
+}
+.payprev{
+    color: rgb(144,144,144);
+    text-decoration: line-through;
+    padding-top: .14rem;
+}
+.cutnum{
+    color: rgb(250,65,81);
+}
+
+.shopCut{
+    height: .86rem;
+    border-top: .01rem solid rgb(224, 224, 224);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 .36rem;
+    align-items: center;
 }
 
 

@@ -1,6 +1,6 @@
 'use strict'
 //光标调用
-setInterval((_ => {
+let mark = setInterval((_ => {
     let n = 1
     return _ => {
         dlb.byId("marker").style.color = n % 2 === 0 ? "#333333" : "#ffffff"
@@ -48,42 +48,6 @@ dlb.addEvent(dlb.byQs('.retract'), 'touchend', function () {
     keybord.slideDown(dlb.byQs('.keybord'))
     dlb.addEvent(dlb.byQs('.payment-cont'), 'click', toUp)
 })
-
-dlb.addEvent(dlb.byId('lastpay'), 'click', _ => wechatApliy())
-
-
-const switchMove = (ele, speed) => dlb.byQs(`.${ele}`).style.left = dlb.byQs(`.${ele}`).offsetLeft + speed + 'px'
-const movePage = state => {
-	let s, b, e, m
-	s = document.body.clientWidth / 60 * (state && state === 'back' ? 1 : -1)
-	m = setInterval(_ => {
-		e = document.body.clientWidth
-	    b = state && state === 'back' ? dlb.byQs('.cardWrapper').offsetLeft : -dlb.byQs('.container').offsetLeft
-	    s = s > 1 && e - b < 1 ? 1 : s
-	    s = (e - b) < Math.abs(s) ? s < 0 ? b - e : e - b : s
-	    switchMove('container', s)
-	    switchMove('keybord-box', s)
-	    switchMove('cardWrapper', s)
-	    if(b >= e)
-	        clearInterval(m)
-	}, 1)
-}
-const appendDom = (elem, domStr) => {
-	dlb.byQs(elem).innerHTML = domStr
-}
-const saveCard = (e, type) => {
-	e = e || window.event
-	type == 'none' ? (
-		dlb.byId('couponReceiveSum').value = "0",
-		dlb.byId('cpCouponReceiveId').value = "0"
-	) : (
-		dlb.byId('couponReceiveSum').value = JSON.parse(dlb.byId('carddetail').innerHTML).count,
-		dlb.byId('cpCouponReceiveId').value = JSON.parse(dlb.byId('carddetail').innerHTML).id,
-		readPayment(dlb.byId('transactionPrice').value)
-	)
-	console.log(dlb.byId('cpCouponReceiveId').value)
-	movePage('back')
-}
 //-------------------------------------------------------------------------------------------//
 let p = location.search.substring(1, location.search.length).split('&').map(val => {
 	let o = {}, a
@@ -98,7 +62,6 @@ dlb.byId('qrcode').value = param.q
 Api.getShopInfo({
 	qrcode: param.q
 }).then(data => {
-	dlb.byId('readPayment').innerHTML = `店铺优惠： ${data.platformDiscount} 折`
 	dlb.byId("merchantDiscount").value = data.platformDiscount
 	dlb.byId("shop").value = JSON.stringify(data)
 })
@@ -144,6 +107,23 @@ dlb.addEvent(dlb.byQs('.tickets'), 'click', _ => {
 	})
 })
 
+dlb.addEvent(dlb.byId('lastpay'), 'click', _ => 
+	wechatApliy()
+	.then(data => {
+		let useagent = Api.IsWeixinOrAlipay()
+		return useagent ? useagent === 'aliy' ? tradePay(data) : useagent === 'wx' ? onBridgeReady(data) : null : null
+	})
+	.then(res => {
+		clearInterval(marker)
+		res ? dlb.byQs('.page').innerHTML = successDom({
+			all: dlb.byId("transactionPrice").value,
+			cut: dlb.byId("platformTransactionAmount").value
+		}) : (
+			showToast('支付失败'),
+			setTimeout(_ => hideToast(), 300)
+		)
+	})
+)
 
 
 
