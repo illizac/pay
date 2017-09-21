@@ -94,6 +94,7 @@ const calamount = (o, c, d) => parseFloat( (parseFloat(o - c) * d / 10).toFixed(
 
 const Api = (_ => {
 	const api = function(){}
+
 	const baseUrl = 'http://pay.qdxiao2.com/proxy'
 
 	const handleProxyPath = (path, success, param, type) => Object.assign({
@@ -110,19 +111,22 @@ const Api = (_ => {
 		},
 		//店铺信息
 		getShopInfo: param => new Promise((rsl, rej) => {
-			// showToast('加载中')
 			dlb.ajax(handleProxyPath(`/sp/shop/v1/payShopInfo/${param.qrcode}`, data => rsl(data), {}, 'post'))
 		}).then(data => {
-			hideToast()
-			return JSON.parse(data).data
+			data = JSON.parse(data)
+			if(data.code == '200')
+				hideToast()
+				return data.data
 		}),
 		//优惠券列表
 		getcarddata: param => new Promise((rsl, rej) => {
 			showToast('加载中')
 			dlb.ajax(handleProxyPath(`/sp/shop/v1/getCouponInfo/${param.o}/${param.q}`, data => rsl(data), {}, 'post'))
 		}).then(data => {
-			hideToast()
-			return JSON.parse(data)
+			data = JSON.parse(data)
+			if(data.code == '200')
+				hideToast()
+				return data
 		}),
 		//创建微信订单
 		createOrder: param => new Promise((rsl, rej) => {

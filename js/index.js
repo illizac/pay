@@ -1,5 +1,6 @@
 'use strict'
 //光标调用
+dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
 let mark = setInterval((_ => {
     let n = 1
     return _ => {
@@ -64,6 +65,7 @@ Api.getShopInfo({
 }).then(data => {
 	dlb.byId("merchantDiscount").value = data.platformDiscount
 	dlb.byId("shop").value = JSON.stringify(data)
+	document.title = data.shopName
 })
 
 dlb.addEvent(dlb.byQs('.tickets'), 'click', _ => {
