@@ -5,7 +5,6 @@
 <meta http-equiv="Cache-Control" content="no-store">
 <title></title>
 <link href="http://pay.zanzanmd.cn/resources/weui/weui.min.css" rel="stylesheet" type="text/css">
-<link href="/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class='page'>
@@ -34,11 +33,6 @@
             <p class="weui-toast__content">已完成</p>
         </div>
     </div>
-
-
-
-
-
     <div class="container">
         <form method="POST" id="payForm" style="display: none;">
             <input type="hidden" id="amount" name="orderAmount" value="">
@@ -64,9 +58,9 @@
         <!-- 优惠价格 -->
          <ul class="tickets" style="display: none;">
             <li class="choose">
-                <img src='/img/youhui@3x.png' class='ticketyouhui'>
+                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjIxNUNCQjVDODRCODExRTc4MDNCRDJFNEI3NEE4ODdEIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjIxNUNCQjVEODRCODExRTc4MDNCRDJFNEI3NEE4ODdEIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MjE1Q0JCNUE4NEI4MTFFNzgwM0JEMkU0Qjc0QTg4N0QiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MjE1Q0JCNUI4NEI4MTFFNzgwM0JEMkU0Qjc0QTg4N0QiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6VadiTAAAHFElEQVR42tRa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' class='ticketyouhui'>
                 <span class='content'>商家优惠</span>
-                <img src='/img/enter@3x.png' class='enter'/>
+                <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAwCAYAAACfbhNRAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjI0RkQ0MzI4ODRCODExRTc5ODM4ODJDMDgzMTNBRDI3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjI0RkQ0MzI5ODRCODExRTc5ODM4ODJDMDgzMTNBRDI3Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MjRGRDQzMjY4NEI4MTFFNzk4Mzg4MkMwODMxM0FEMjciIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MjRGRDQzMjc4NEI4MTFFNzk4Mzg4MkMwODMxM0FEMjciLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4WCUQIAAAC9ElEQVR42ryYbWiNYRjH73McWQdjmbytrCXig3mZt5BGkrS8TEhDipZkKXkrEj6YL5OXD2vq8AEhrxvmJSEmLxNJKUWJD0YkLWkz/C/9ny/auZ7Hc57rXPXr1M7/af9z3/dzvdyxVCqVdM7tAeVgIHgKdoBLLksRB0dAFRgEYmAMqAe7+X1WTJR38ncxsw1cALnZMPFC+b4MPABDrU1UgPeKZjh4CGZbr0QJaFJ0vUED2MytityERAuYDuoUbRdQDU6ApIUJiTZQCdaAduWZJeA+KLQw4UUtmAE+Ks8Vg8eg1MqExF2ekyfKs/ngOlhnZULiHZgCjimaBDgAUqCbhQmJH2AZ2AA6FN1KcJtpP3ITXtQwT3xRNBN5TiZZmZC4Acb7ZFhZiVtglZUJidf8pecVjZyNw+AQ6GphQqKVRU/K/W9Ft5ar19fChOM/3wXmgW+KbhrPyWgLE17U80C+UjSDwT1mWhMTEi/BBNCoaJKsOdWsQZGbkPjK3mOvck5irMKXQZ6FCcdktgUsBd8V3SzwCIywMOHFSab7t4pmCDu2uVYmHDv2ceCOounJfFNp2U1/AjPBQUUj52SndUsfC1BdOxKGBvqBs2CyovkFNlqZKOF+F/i81vImNVpsxwp2ZgVBE1yUJmRV94GjIEfRNfyb6qMy0QdcBevDFL0ozsRI7n+RT/lfnq4PyXQlFnJyK8qkEQprIs6rg9OgR4YtYajtyOUYUBagOd7k06WHMjEMXOSnNias9plXQpuYA46DXopGrhjmg+aou23J/1vZymkGJEGN/V8DQVaiO0e8RT66Wt57tYfNcumikHdWxYqmjQNxXaaptrMo5euXrzzbwvmjyWIqr+LIrxloDnDFFMpEDovPfp9tkldvqtMv20Jth1yknmN2Sxc/2bLXRF37xcQocAUMUHSfwWJw06IDSnB5NQPPmYDeWPWBcZ8UfIY9opkBz8SpNA3odiapVuOO/O92SLH5ABaA/uCZzALgmstS/BFgAJkLkod1pzLCAAAAAElFTkSuQmCC' class='enter'/>
             </li>
         </ul>
         <!-- 输入键盘 -->
@@ -107,7 +101,6 @@
             </table>
         </div>
     </div>
-
     <div class = 'cardWrapper'>
         <ul class='cardContainer'>
             <li class='cardNone'>
@@ -117,9 +110,6 @@
         </ul>
     </div>
 </div>
+<script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
 </body>
-<script src="/bower_components/crypto-js/crypto-js.js"></script>
-<script src="/js/base.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/index.js"></script>
 </html>

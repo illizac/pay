@@ -159,6 +159,3 @@ dlb.addEvent(dlb.byId('lastpay'), 'click', _ =>
 
 
 
-
-
-

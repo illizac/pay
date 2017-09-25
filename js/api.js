@@ -95,12 +95,12 @@ const calamount = (o, c, d) => parseFloat( (parseFloat(o - c) * d / 10).toFixed(
 const Api = (_ => {
 	const api = function(){}
 
-	const baseUrl = 'http://pay.qdxiao2.com/proxy'
+	const baseUrl = 'http://pay.qdxiao2.com'
 
 	const handleProxyPath = (path, success, param, type) => Object.assign({
-		url: baseUrl,
-		type: 'GET',
-		data: Object.assign({}, {path, type}, param),
+		url: `${baseUrl}${path}`,
+		type,
+		data: param,
 		success
 	}, path === '/pay/rest/v1/createOrder' ? {header: 'application/json'} : {})
 
@@ -214,15 +214,15 @@ const wechatApliy = _ => new Promise((rsl, rej) => {
 	})
 })
 
-const onBridgeReady = ({appId, timeStamp, nonceStr, package, signType, paySign}) => new Promise((rsl, rej) => {
+const onBridgeReady = data => new Promise((rsl, rej) => {
     WeixinJSBridge.invoke(
         'getBrandWCPayRequest', {
-            appId,     //公众号名称，由商户传入
-            timeStamp,         //时间戳，自1970年以来的秒数
-            nonceStr, //随机串
-            package,
-            signType,         //微信签名方式：
-            paySign//微信签名
+            appId: data.appId,     //公众号名称，由商户传入
+            timeStamp: data.timeStamp,         //时间戳，自1970年以来的秒数
+            nonceStr: data.nonceStr, //随机串
+            package: data.package,
+            signType: data.signType,         //微信签名方式：
+            paySign: data.paySign//微信签名
         }, function (res) {
         	rsl(res)
         }
