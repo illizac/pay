@@ -268,7 +268,6 @@ function inputing(e) {
    if(dlb.isNumeric(newAmount) && newAmount>0){
         readPayment(Number(newAmount))
    }
-
     e.preventDefault()
 }
 
@@ -315,12 +314,17 @@ const Api = (_ => {
 
 	const baseUrl = 'http://pay.qdxiao2.com'
 
-	const handleProxyPath = (path, success, param, type) => Object.assign({
-		url: `${baseUrl}${path}`,
-		type,
-		data: param,
-		success
-	}, path === '/pay/rest/v1/createOrder' ? {header: 'application/json'} : {})
+	const handleProxyPath = (path, success, param, type) => {
+        let obj = {
+            url: `${baseUrl}${path}`,
+            type,
+            data: param,
+            success
+        }
+        path === '/pay/rest/v1/createOrder' ? obj.header = 'application/json' : null
+        return obj
+        // Object.assign(, path === '/pay/rest/v1/createOrder' ? {header: 'application/json'} : {})
+    }
 
 	api.prototype = {
 		IsWeixinOrAlipay: _ => {
@@ -419,11 +423,12 @@ const wechatApliy = _ => new Promise((rsl, rej) => {
 	}
     array.sort()
     let s = ""
-    for (let i of array) {
-        s += i
+    for(let i in array) {
+        s += array[i]
     }
     let sercet = CryptoJS.SHA1(s).toString()
-    o = Object.assign({}, o, {sercet})
+    // o = Object.assign({}, o, {sercet})
+    o.sercet = sercet
     
     Api.createOrder(o).then(data => {
         hideToast()
@@ -474,7 +479,7 @@ const successDom = ({all, cut}) => `<div class = 'success'>
 
 
 window.onload = function(){
-        //光标调用
+    //光标调用
     dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
     let mark = setInterval((_ => {
         let n = 1
@@ -487,17 +492,20 @@ window.onload = function(){
     dlb.byQs('.payment-cont-num').innerHTML = ''
     dlb.byId("amount").value = ''
 
+
     //监听触摸键盘事件
     const oBack = dlb.byQs('.keybord-back')
-    for(let numEle of dlb.byName('number')){
+
+    for(let i = 0; i < dlb.byName('number').length; i++){
         //键盘触摸的时候颜色变化
-        dlb.addEvent(numEle, 'touchstart', function (e) {
+        dlb.addEvent(dlb.byName('number')[i], 'touchstart', function (e) {
             keybord.changeBc(this)
             e.preventDefault()
         })
         //键盘触摸抬起的时候输入值
-        dlb.addEvent(numEle, 'touchend', inputing)
+        dlb.addEvent(dlb.byName('number')[i], 'touchend', inputing)
     }
+
     //按下退格键颜色变化
     dlb.addEvent(oBack, 'touchstart', function (e) {
         keybord.changeBc(this)
@@ -525,13 +533,17 @@ window.onload = function(){
         dlb.addEvent(dlb.byQs('.payment-cont'), 'click', toUp)
     })
     //-------------------------------------------------------------------------------------------//
-    let p = location.search.substring(1, location.search.length).split('&').map(val => {
+    let p = document.location.search.substring(1, document.location.search.length).split('&').map(val => {
         let o = {}, a
         a = val.split('=')
         o[a[0]] = a[1]
         return o
     })
-    let param = Object.assign(p[0], p[1])
+    
+    var param = {
+        o: p[0].o,
+        q: p[1].q
+    }
     dlb.byId('openid').value = param.o
     dlb.byId('qrcode').value = param.q
 
@@ -540,7 +552,13 @@ window.onload = function(){
     }).then(data => {
         dlb.byId("merchantDiscount").value = data.platformDiscount
         dlb.byId("shop").value = JSON.stringify(data)
-        document.title = data.shopName
+
+        Api.IsWeixinOrAlipay() === 'aliy' ? 
+        AlipayJSBridge.call('setTitle', {
+          title: data.shopName,
+        })
+        : document.title = data.shopName
+        
     })
 
     dlb.addEvent(dlb.byQs('.tickets'), 'click', _ => {
@@ -550,7 +568,9 @@ window.onload = function(){
                     <span>不使用优惠券</span>
                     <div class='img'></div>
                 </li>`
-            for(let i of data.data || []){
+            let arr = data.data || []
+            for(let ct in arr){
+                let i = arr[ct] 
                 let type = i.couponType === '1' ? '优惠券' : '红包'
                 html += dlb.byId('transactionPrice').value >= i.fullAmount ? `<li class='cardItem'>
                     <span id='carddetail' style="display: none;">${JSON.stringify({id: i.id, count: i.discountAmount})}</span>
@@ -578,8 +598,8 @@ window.onload = function(){
                 e = e || window.event
                 saveCard(e, 'none')
             })
-            for(let elem of dlb.byQsa('.cardItem')){
-                dlb.addEvent(elem, 'click', saveCard)
+            for(let i = 0; i < dlb.byQsa('.cardItem').length; i++){
+                dlb.addEvent(dlb.byQsa('.cardItem')[i], 'click', saveCard)
             }
         })
     })
