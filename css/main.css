@@ -445,9 +445,8 @@ body{
     height: .86rem;
     border-top: .01rem solid rgb(224, 224, 224);
     display: flex;
-    justify-content: space-between;
     padding: 0 .36rem;
-    align-items: center;
+    line-height: .86rem;
 }
 
 

@@ -5,8 +5,211 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<title></title>
 	<link href="/getCard/css/main.css" rel="stylesheet" type="text/css">
+	<link href="http://pay.zanzanmd.cn/resources/weui/weui.min.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript">
+		// const baseUrl = "http://mt.qdxiao2.com/api-mt"
+		const baseUrl = "http://192.168.1.106:8095"
+
+		const dlb = {
+		    byName: name => document.getElementsByName(name),
+		    byId: id => document.getElementById(id),
+		    byQs: ele => document.querySelector(ele),
+		    byQsa: eles => document.querySelectorAll(eles),
+		    show: obj => obj.style.display = 'block',
+		    hide: obj => obj.style.display = 'none',
+		    isNumeric: num => !!Number(num),
+		    //判断是否是整数
+		    isInt: num => num % 1 == 0 ? parseInt(num) : Number(num).toFixed(1),
+		    //事件监听
+		    addEvent: (obj, sEv, fn) => obj.addEventListener ? obj.addEventListener(sEv, fn, false) : obj.attachEvent('on' + sEv, fn),
+		    removeEvent: (obj, sEv, fn) => obj.removeEventListener ? obj.removeEventListener(sEv, fn, false) : obj.detachEvent('on' + sEv, fn),
+		    //增加className
+		    addClass: (obj, sClass) => {
+		        if (obj.className) {
+		            var reg = new RegExp('\\b' + sClass + '\\b', 'g')
+		            if (obj.className.search(reg) == -1) {
+		                obj.className += ' ' + sClass
+		            }
+		        } else {
+		            obj.className = sClass
+		        }
+		    },
+		    //删除className
+		    removeClass: (obj, sClass) => {
+		        if (obj.className) {
+		            var reg = new RegExp('\\b' + sClass + '\\b', 'g')
+		            if (obj.className.search(reg) != -1) {
+		                obj.className = obj.className.replace(reg, '').replace(/^\s+|\s+$/, ' ').replace(/\s+/g, ' ')
+		                if (!obj.className) {
+		                    obj.removeAttribute("class")
+		                }
+		            }
+		        }
+		    },
+		    //查看是否有这个class名，有就返回true否则返回false
+		    hasClass: (obj, cls) => {
+		        var obj_class = obj.className,              //获取 class 内容.
+		            obj_class_lst = obj_class.split(/\s+/)     //通过split空字符将cls转换成数组.
+		        var x = 0
+		        for (x in obj_class_lst) {
+		            if (obj_class_lst[x] == cls) {          //循环数组, 判断是否包含cls
+		                return true
+		            }
+		        }
+		        return false
+		    },
+		    //清除所有iclass
+		    clear: (item, iclass) => {
+		        for(let i in item)
+		            dlb.removeClass(item[i], iclass)
+		    },
+		    //ajax函数 封装
+		    json2url: json => {
+		        let arr = []
+		        for (let name in json) {
+		            arr.push(name + '=' + encodeURIComponent(json[name]))
+		        }
+		        return arr.join('&')
+		    },
+		    // data, type, timeout, url, success, error
+		    ajax: json => {
+		        var timer = null
+		        json = json || {}
+		        if (!json.url)return
+		        json.data = json.data || {}
+		        json.type = json.type || 'get'
+		        json.timeout = json.timeout || 8000
+
+		        if (window.XMLHttpRequest) {
+		            var oAjax = new XMLHttpRequest()
+		        } else {
+		            var oAjax = new ActiveXObject('Microsoft.XMLHTTP')
+		        }
+		        switch (json.type.toLowerCase()) {
+		            case 'get':
+		                oAjax.open('GET', json.url + '?' + dlb.json2url(json.data), true)
+		                oAjax.send()
+		                break
+		            case 'post':
+		                oAjax.open('POST', json.url, true)
+		                oAjax.setRequestHeader('Content-Type', json.header || 'application/x-www-form-urlencoded')
+		                oAjax.send(json.header ? JSON.stringify(json.data) : dlb.json2url(json.data))
+		                break
+		        }
+		        oAjax.onreadystatechange = function () {
+		            if (oAjax.readyState == 4) {
+		                clearTimeout(timer)
+		                if (oAjax.status >= 200 && oAjax.status < 300 || oAjax.status == 304) {
+		                    json.success && json.success(oAjax.responseText)
+		                } else {
+		                    json.error && json.error(oAjax.status)
+		                }
+		            }
+		            timer = setTimeout(function () {
+		                if (oAjax.readyState != 4) {
+		                    clearTimeout(timer)
+		                    json.error && json.error()
+		                }
+		            }, json.timeout)
+		        }
+		    },
+		    jsonp: json => {
+		        json = json || {}
+		        if (!json.url)return
+		        json.cbName = json.cbName || 'cb'
+		        json.data = json.data || {}
+
+		        json.data[json.cbName] = 'show' + Math.random()
+		        json.data[json.cbName] = json.data[json.cbName].replace('.', '')
+
+		        var arr = []
+		        for (var i in json.data) {
+		            arr.push(i + '=' + encodeURIComponent(json.data[i]))
+		        }
+		        var str = arr.join('&')
+
+		        window[json.data[json.cbName]] = function (result) {
+		            json.success && json.success(result)
+		            oH.removeChild(oS)
+		            window[json.data[json.cbName]] = null
+		        }
+		        var oH = document.getElementsByTagName('head')[0]
+		        var oS = document.createElement('script')
+		        oS.src = json.url + '?' + str
+		        oH.appendChild(oS)
+		        oS.onerror = function () {
+		            window[json.data[json.cbName]] = null
+		            oH.removeChild(oS)
+		            json.error && json.error()
+		        }
+		    }
+		}
+
+		const Api = (_ => {
+			const api = function(){}
+
+			const handleProxyPath = (path, success, param, type) => {
+		        let obj = {
+		            url: `${baseUrl}${path}`,
+		            type,
+		            data: param,
+		            success
+		        }
+		        return obj
+		    }
+
+			api.prototype = {
+				getCard: param => new Promise((rsl, rej) => {
+					dlb.ajax(handleProxyPath(`/couponReceive/v1/receive?cpBatchId=${param.cpBatchId}&openId=${param.openId}`, data => rsl(data), {}, 'get'))
+				}).then(data => {
+					console.log(data)
+				})
+			}
+			return new api()
+		})()
+
+		const showToast = msg => {
+		    msg = msg || "数据加载中"
+		    dlb.byId("toast_msg").innerHTML = msg
+		    dlb.show(dlb.byId("loadingToast"))
+		}
+
+		const hideToast = _ => dlb.hide(dlb.byId("loadingToast"))
+
+		const showDialog = title => dlb.show(dlb.byId("mydailg"))
+
+		const showToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
+
+		const hideToastSuccess = _ => dlb.show(dlb.byId("toastsuccess"))
+	</script>
 </head>
 <body>
+	<div id="loadingToast">
+        <div class="weui-mask" style="opacity: 0;"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content" id="toast_msg">加载中</p>
+        </div>
+    </div>
+    <div style="display: none;" id="mydailg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title" id=""></strong></div>
+            <div class="weui-dialog__bd"></div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+            </div>
+        </div>
+    </div>
+    <!-- 支付成功-->
+    <div id="toastsuccess" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content">已完成</p>
+        </div>
+    </div>
+
 	<div class='wrapper'>
 		<div class='banner'></div>
 		<div class="container">
@@ -34,4 +237,18 @@
 		</div>
 	</div>
 </body>
+<script type="text/javascript">
+	let p = document.location.search.substring(1, document.location.search.length).split('&').map(val => {
+        let o = {}, a
+        a = val.split('=')
+        o[a[0]] = a[1]
+        return o
+    })
+    
+    var param = {
+        cpBatchId: p[0].cpBatchId,
+        openId: p[1].openId
+    }
+    console.log(param)
+</script>
 </html>
