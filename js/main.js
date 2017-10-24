@@ -494,6 +494,7 @@ const successDom = ({all, cut}) => `<div class = 'success'>
 window.onload = function(){
     //光标调用
     dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
+
     let mark = setInterval((_ => {
         let n = 1
         return _ => {
@@ -546,14 +547,15 @@ window.onload = function(){
         dlb.addEvent(dlb.byQs('.payment-cont'), 'click', toUp)
     })
     //-------------------------------------------------------------------------------------------//
-    let p = document.location.search.substring(1, document.location.search.length).split('&').map(val => {
-        let o = {}, a
+    let p = {}
+    document.location.search.substring(1, document.location.search.length).split('&').map(val => {
+        let a
         a = val.split('=')
-        o[a[0]] = a[1]
-        return o
+        p[a[0]] = a[1]
     })
 
-    p = Object.assign(p[0], p[1])
+    // p = Object.assign(p[0], p[1])
+
     
     var param = {
         o: p.o,
@@ -589,7 +591,7 @@ window.onload = function(){
                     type = i.couponType === '1' ? '优惠券' : '红包',
                     fullAmount = i.fullAmount / 100,
                     discountAmount = i.discountAmount / 100
-                
+
                 html += dlb.byId('transactionPrice').value >= fullAmount ? `<li class='cardItem'>
                     <span id='carddetail' style="display: none;">${JSON.stringify({id: i.id, count: discountAmount})}</span>
                     <div class='cardContent'>
