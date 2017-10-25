@@ -417,7 +417,7 @@ const wechatApliy = _ => new Promise((rsl, rej) => {
         amount = dlb.byId("platformTransactionAmount").value,
         isCouponReceiveId = cpCouponReceiveId === '0' ? '2' : '1',
         merchantDiscount = dlb.byId('merchantDiscount').value,
-        receivedPrice = transactionPrice - couponReceiveSum
+        receivedPrice = (Number(transactionPrice) * 100 - Number(couponReceiveSum) * 100) / 100
 
     let o = {
 			qrcode,
@@ -508,8 +508,8 @@ const successDom = ({all, cut}) => `<div class = 'success'>
 
 window.onload = function(){
     //光标调用
-    // dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
-    dlb.byQs('.tickets').style.display = 'block'
+    dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
+    // dlb.byQs('.tickets').style.display = 'block'
 
     let mark = setInterval((_ => {
         let n = 1
@@ -599,7 +599,7 @@ window.onload = function(){
         Api.getcarddata(param).then(data => {
             let html = `<li class='cardNone'>
                     <span>不使用优惠券</span>
-                    <div class='img'></div>
+                    <img class='img' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjJDRkI0RkZBODRCODExRTdBMTQ5QzM0RTE4NDJEMUNCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjJDRkI0RkZCODRCODExRTdBMTQ5QzM0RTE4NDJEMUNCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MkNGQjRGRjg4NEI4MTFFN0ExNDlDMzRFMTg0MkQxQ0IiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MkNGQjRGRjk4NEI4MTFFN0ExNDlDMzRFMTg0MkQxQ0IiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7aR3DhAAAFJElEQVR42tRaCYhVVRi+je2oMYZELgWVLWI0pI5bG6VkaEGZY5tlRWgLllCa7WSLFUVZVAxF5lg5WuSgENimrU5p88rRwkwqxWgj1LQpTfv+5nvT5fb/5567PG998PEe95x73/vu+c+/3btXS0tLkBM6g0PBE8ETwF5gT7ALuC/4J/gruIlsBVeAy8Ef0v5oTU1Nx/e9MwqQ888Dx4DDwW4x86vB3vx+Lj/bwDfBBeArFJwKVRlW4VbwK7ARrPMQYmF/cBQ4G1wP3sOV3CNirgPX8UcPC/JFd96kleCBlRTTB1wKPg4eElQW/cDz09i8D8SMGjyWfzv4Ae/sKnAj+CP4B3+rG/dMX7A/HUa1ca2dlRAzHbwvZs4ycC7YxD/vi67gmeBl3DdlNIMv5y3mXvAWx/hb3DtvpzSnLfRiC+jSRdBmcFZa1+paEUuIuM/J4HM57pNPyExxQsMYh2kt5x7aEPzHoHmz3g57XQgOKVjIGeAS8F1wXJyYRcZFXg1F7aIg7voNcAR4EjivVCqdZYmZxLwqihVMW4rEWDqKKCZqYvYDH1MmS+50esFCZI/ON8ZaNTHTjKB4Ibi1QCEXMP/TsAa8PypGPm9UJr/DTV8U5Ea+5BBSixJgW1RMHeuOKK4uWMiLxthqcCC4TfNmE4xVWVOQkItihNQyD/xXnOlM3x3FrIKEXAK+ELMi262geYqSCcjkxQUJaXB4LVmR31zpzGDluNQtv/+fhJRXpp9y/EPPP3Aog1n/jELGZxVSFnO44fbicDLL5/nMEO5OKeRScI5DyEAfIWUx3ZXjGz3OfTZSp98OzkwoRIqy542xVRTSliRr1uLLLx7n9lCOTQtH5BhMYEdGw2c0rbYkd6bKqGl2eJz7qHH8Zg9BVzgKu08TCBmLrPkucETZm2mNg308LnQbeAQjtSZot1GpXgk+Y1yzBA5iAyQOD4BTO04sla6pMpLI6hwitdYIuSonIQeHhRCPiJiflMm9EpjqxY6ILYJmhObVG/NaEggRHK21pkTM18pA3xQBb67DHBc7xpMKscR8WcV8J4ohOQe+UY6OzCBPhxP3/1aLmGZl4DRWnmkCYEOC1tLgFEIEI5VjzSJmmeLRJBiOzhDRGyooZICRtSwpezOtIzk5Q67lEpRFiPW/1qHiXFsuzrRILKXBcRkFRXOuj1LukbBLHq8cnxOuNBujJSjxVMZsWHKva4P2puIdFLIzw/WsrKM+LEaeNz6sTDoVPCejoCdZJszIeJ0BDAFRNMLEvo+2mmYad20eS+ui0WQcvyna0AhYM0xRJh8QtD9ALRKLjCz9CazKBk3M34NBqEMYQm1gN+IqjaeNMCFlyvVaqykMK77U0eT2tJCJxtjZ4K44Md8E7S1RDfII4T3W/pVEF5qWJURKi/e14kyDmNSdxtgw8HNmwZXAaF7fspDZVvHnenQuDYqHjLGDmAW/RnF5oIZmLCvS05gj45e7ymYXpjLYuRI+MbvXGZmrEwoQly8PsBayFBjnmFtvVLUd8Hl0LsFuPVMGS/xwUp4ey3sAH7Nd9S34M9OXThQrb3UcQw85jClKHKRR8mDcJN+XGqSSXMmS12VWXblaI3MyvbV0Akt9uzO++CJof454g1Fq54kdtIhjfYUkFVOGPCo8it5uU84itjKZ7MO9ujtp3ywNNtPbHcnkr8nIun2wi+nSJLaupjDWJUbWl+fauJ+E8pLPUGa3x9O99mAA7BT88ybgd2Qr96E4i1zeK/hLgAEAP6UovGCFF3QAAAAASUVORK5CYII=' />
                 </li>`
             let arr = data.data || []
             for(let ct in arr){
@@ -620,7 +620,11 @@ window.onload = function(){
                                 <p>店铺${discountAmount}元${type}</p>
                                 <p>进店消费满${fullAmount}元可用</p>
                             </div>
-                            <div class='img'></div>
+                            <img class='img' src='${
+                                dlb.byId('cpCouponReceiveId').value == i.id ? 
+                                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjA5Mjk0RDAzODRCOTExRTdBMTdBOERDRDZFMzlENDVEIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjA5Mjk0RDA0ODRCOTExRTdBMTdBOERDRDZFMzlENDVEIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDkyOTREMDE4NEI5MTFFN0ExN0E4RENENkUzOUQ0NUQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDkyOTREMDI4NEI5MTFFN0ExN0E4RENENkUzOUQ0NUQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4epYtcAAAD+UlEQVR42tSabWhOYRjH7z2Mzcs2TCJRXjbUrJXWvLTQNqUoopU8mYS8FEJD2swiQqZY84HS0Fj5YEhLYl5WpnxYIUzji1aLmZcNMf9rz3XsdOy83+d5zrnq17bnnOfc12/nnPu+7vucuNz6rUJSJIA5YB6YAdLAGDAUJIPP4BtoA6/Ac/AQPAbdMhIY6PL7iWA5WAUWspBeJDPjQJbqcxK5Cy6Da6Ar2jIpYDvYAlIlnNHFTDs4AypAh90DhRzsvxG0gFIJItpI5eO+5XZCXslMBY2gCowU3sYIbqeR25UqsxI8BdkiupHN7a6UJVMMroAkEZtI4vaL3cocB0dAnIhtxHEex5zK7AE7hb9iF+dlS6YQHBb+DMprmVWZaeC8Dy4tvXgPnlmRob8vgCE+FXkH5oNWKzIbYtD9ShHRylDddCioIlqZzVEY2T0TUctQsbcjoCJpSrWuyCwBowMokgkawFK1TDiAIjQRvMcTwLAiQ6coP2AilG89z6so8miiGGLDhACJ0Mz2Bk/H1RO82SSTGyCRInAVDOpnWy7JZDhsvJunudES2cZl1gCd7RkkM9lB46d4nkE94CiwmhPySqSE1wWM6sUpJDPWZuO/wF7+SfERXLI6sNkUoeRPgjIr6wchVY9gNdp0loMooQU2hMxE6HI6x6tAVmJ4SOdmMgq6tAbrbLMqZCZCOdWAtTby6pX5aVOGRAoMtpsJmYnQ9KMOrLCZ1xeS6XBw01aa9IJ6QmYiKTwYFjjIqVfmg4MvjheRdeI8G0JmIlSW0DLtXIe9YjvJtLhYArrFA5mZ0H0TkQm8T5aLseoNyTS7OEA8D2SlBmNAq4lIOle+6S4H3uYQH8hNkMQB7kbjbX43k8/IRAlVRAPJyHo+Qt3oTWF95VNdwrsNyr8xxL/ckVRjUWn+gDsIoyjQlPBug/LvUiZn1RKr35kisnqfYVDC12lKeLdRrZ5pXpdYAau77nwbJbzTaOf8/8l080AoM5L4HiqyWMI7jUrlnlcvNVVwBSwzlK77toUS3kl84uMKrQxt2O/BDJIEFnk0Oy3jvP+ToTgLnohgBD1RO63+QCvzB6wB330u0ikij+t/G8lQvATrQI9PRSiv9eC1doPew6Yarrf8GPu4exdWZSjKwQmfiSjPWIVdGQrlGWKPDy4tymO30U5WHp0fFZFnnJ0xvNkLOQ/hVoaiFswCTVEWaeJ2a63sbOd1E+o9csAm9UDlUXRwOzn99VoyZJRxiN5pmQQOSi5OlaKxnI9fxe0Jr2TU/7lSnruHufZyOsH7wd8P8/FKnJ55ty/P0crmRSZR9L0JOF30vQk4jCtoupG/ir43AV+AR0yXjNP6V4ABAHQN50uSUtvRAAAAAElFTkSuQmCC'
+                                : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjJDRkI0RkZBODRCODExRTdBMTQ5QzM0RTE4NDJEMUNCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjJDRkI0RkZCODRCODExRTdBMTQ5QzM0RTE4NDJEMUNCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MkNGQjRGRjg4NEI4MTFFN0ExNDlDMzRFMTg0MkQxQ0IiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MkNGQjRGRjk4NEI4MTFFN0ExNDlDMzRFMTg0MkQxQ0IiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7aR3DhAAAFJElEQVR42tRaCYhVVRi+je2oMYZELgWVLWI0pI5bG6VkaEGZY5tlRWgLllCa7WSLFUVZVAxF5lg5WuSgENimrU5p88rRwkwqxWgj1LQpTfv+5nvT5fb/5567PG998PEe95x73/vu+c+/3btXS0tLkBM6g0PBE8ETwF5gT7ALuC/4J/gruIlsBVeAy8Ef0v5oTU1Nx/e9MwqQ888Dx4DDwW4x86vB3vx+Lj/bwDfBBeArFJwKVRlW4VbwK7ARrPMQYmF/cBQ4G1wP3sOV3CNirgPX8UcPC/JFd96kleCBlRTTB1wKPg4eElQW/cDz09i8D8SMGjyWfzv4Ae/sKnAj+CP4B3+rG/dMX7A/HUa1ca2dlRAzHbwvZs4ycC7YxD/vi67gmeBl3DdlNIMv5y3mXvAWx/hb3DtvpzSnLfRiC+jSRdBmcFZa1+paEUuIuM/J4HM57pNPyExxQsMYh2kt5x7aEPzHoHmz3g57XQgOKVjIGeAS8F1wXJyYRcZFXg1F7aIg7voNcAR4EjivVCqdZYmZxLwqihVMW4rEWDqKKCZqYvYDH1MmS+50esFCZI/ON8ZaNTHTjKB4Ibi1QCEXMP/TsAa8PypGPm9UJr/DTV8U5Ea+5BBSixJgW1RMHeuOKK4uWMiLxthqcCC4TfNmE4xVWVOQkItihNQyD/xXnOlM3x3FrIKEXAK+ELMi262geYqSCcjkxQUJaXB4LVmR31zpzGDluNQtv/+fhJRXpp9y/EPPP3Aog1n/jELGZxVSFnO44fbicDLL5/nMEO5OKeRScI5DyEAfIWUx3ZXjGz3OfTZSp98OzkwoRIqy542xVRTSliRr1uLLLx7n9lCOTQtH5BhMYEdGw2c0rbYkd6bKqGl2eJz7qHH8Zg9BVzgKu08TCBmLrPkucETZm2mNg308LnQbeAQjtSZot1GpXgk+Y1yzBA5iAyQOD4BTO04sla6pMpLI6hwitdYIuSonIQeHhRCPiJiflMm9EpjqxY6ILYJmhObVG/NaEggRHK21pkTM18pA3xQBb67DHBc7xpMKscR8WcV8J4ohOQe+UY6OzCBPhxP3/1aLmGZl4DRWnmkCYEOC1tLgFEIEI5VjzSJmmeLRJBiOzhDRGyooZICRtSwpezOtIzk5Q67lEpRFiPW/1qHiXFsuzrRILKXBcRkFRXOuj1LukbBLHq8cnxOuNBujJSjxVMZsWHKva4P2puIdFLIzw/WsrKM+LEaeNz6sTDoVPCejoCdZJszIeJ0BDAFRNMLEvo+2mmYad20eS+ui0WQcvyna0AhYM0xRJh8QtD9ALRKLjCz9CazKBk3M34NBqEMYQm1gN+IqjaeNMCFlyvVaqykMK77U0eT2tJCJxtjZ4K44Md8E7S1RDfII4T3W/pVEF5qWJURKi/e14kyDmNSdxtgw8HNmwZXAaF7fspDZVvHnenQuDYqHjLGDmAW/RnF5oIZmLCvS05gj45e7ymYXpjLYuRI+MbvXGZmrEwoQly8PsBayFBjnmFtvVLUd8Hl0LsFuPVMGS/xwUp4ey3sAH7Nd9S34M9OXThQrb3UcQw85jClKHKRR8mDcJN+XGqSSXMmS12VWXblaI3MyvbV0Akt9uzO++CJof454g1Fq54kdtIhjfYUkFVOGPCo8it5uU84itjKZ7MO9ujtp3ywNNtPbHcnkr8nIun2wi+nSJLaupjDWJUbWl+fauJ+E8pLPUGa3x9O99mAA7BT88ybgd2Qr96E4i1zeK/hLgAEAP6UovGCFF3QAAAAASUVORK5CYII='
+                            }'/>
                         </div>
                     </div>
                     <div class='cardBottom'>
@@ -637,50 +641,52 @@ window.onload = function(){
         })
     })
 
-    dlb.addEvent(dlb.byId('lastpay'), 'click', _ => 
-        wechatApliy()
-        .then(data => {
-            let useagent = Api.IsWeixinOrAlipay()
-            return useagent ? useagent === 'aliy' ? tradePay(data) : useagent === 'wx' ? onBridgeReady(data) : null : null
-        })
-        .then(res => {
-            let fail = msg => {
-                showToast(msg)
-                setTimeout(_ => hideToast(), 300)
-            }
-            let wxRes = _ => {
-               switch(res['err_msg']){
-                case 'get_brand_wcpay_request:ok':  
-                    clearInterval(marker)
-                    dlb.byQs('.page').innerHTML = successDom({
-                        all: dlb.byId("transactionPrice").value,
-                        cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
-                    })
-                    break
-                case 'get_brand_wcpay_request:cancel': 
-                    fail('支付取消')
-                    break
-                case 'get_brand_wcpay_request:fail': 
-                    fail('支付失败')
-                    break
-                default: 
-                    fail('支付失败')
-                    break
-               }
-            }
-            let aliyRes = _ => {
-                res.resultCode == '9000' ? (
-                    clearInterval(marker),
-                    dlb.byQs('.page').innerHTML = successDom({
-                        all: dlb.byId("transactionPrice").value,
-                        cut: dlb.byId("platformTransactionAmount").value
-                    })
-                ) : fail('支付失败')
-            }
-            let useagent = Api.IsWeixinOrAlipay()
-            res ? useagent === 'wx' ? wxRes() : useagent === 'aliy' ? aliyRes() : fail('支付失败') : fail('支付失败')
-        })
-    )
+    dlb.addEvent(dlb.byId('lastpay'), 'click', _ => {
+        if( dlb.byId('transactionPrice').value > 0 ){
+            wechatApliy()
+                .then(data => {
+                    let useagent = Api.IsWeixinOrAlipay()
+                    return useagent ? useagent === 'aliy' ? tradePay(data) : useagent === 'wx' ? onBridgeReady(data) : null : null
+                })
+                .then(res => {
+                    let fail = msg => {
+                        showToast(msg)
+                        setTimeout(_ => hideToast(), 300)
+                    }
+                    let wxRes = _ => {
+                       switch(res['err_msg']){
+                        case 'get_brand_wcpay_request:ok':  
+                            clearInterval(marker)
+                            dlb.byQs('.page').innerHTML = successDom({
+                                all: dlb.byId("transactionPrice").value,
+                                cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
+                            })
+                            break
+                        case 'get_brand_wcpay_request:cancel': 
+                            fail('支付取消')
+                            break
+                        case 'get_brand_wcpay_request:fail': 
+                            fail('支付失败')
+                            break
+                        default: 
+                            fail('支付失败')
+                            break
+                       }
+                    }
+                    let aliyRes = _ => {
+                        res.resultCode == '9000' ? (
+                            clearInterval(marker),
+                            dlb.byQs('.page').innerHTML = successDom({
+                                all: dlb.byId("transactionPrice").value,
+                                cut: dlb.byId("platformTransactionAmount").value
+                            })
+                        ) : fail('支付失败')
+                    }
+                    let useagent = Api.IsWeixinOrAlipay()
+                    res ? useagent === 'wx' ? wxRes() : useagent === 'aliy' ? aliyRes() : fail('支付失败') : fail('支付失败')
+                })
+        }
+    })
 }
 
 
