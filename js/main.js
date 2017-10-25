@@ -240,13 +240,25 @@ const speFunOpen = _ => {
 
 function readPayment(amount) {
     dlb.byId("transactionPrice").value = amount || 0
-    var merchantDiscount = dlb.byId("merchantDiscount").value
-    let couponReceiveSum = dlb.byId('couponReceiveSum').value
-    var amount = calamount(amount, couponReceiveSum,  merchantDiscount)
+    let merchantDiscount = dlb.byId("merchantDiscount").value,
+        couponReceiveSum = dlb.byId('couponReceiveSum').value,
+        cpCouponReceiveId = dlb.byId("cpCouponReceiveId").value,
+        type = dlb.byId('cpCouponReceiveType').value,
+        fullCount = dlb.byId('cpCouponReceiveFull').value
+
+    if( (cpCouponReceiveId != '0' && fullCount == couponReceiveSum && Number(amount) <= fullCount) || (cpCouponReceiveId != '0' && fullCount > couponReceiveSum && Number(amount) < fullCount) ){
+        dlb.byId("cpCouponReceiveId").value = '0'
+        couponReceiveSum = dlb.byId("couponReceiveSum").value = '0'
+        type = dlb.byId('cpCouponReceiveType').value = '0'
+        fullCount = dlb.byId('cpCouponReceiveFull').value = '0'
+    }
+
+    amount = calamount(amount, couponReceiveSum,  merchantDiscount)
+
     if (amount) {
         dlb.byId("platformTransactionAmount").value = amount
     } else {
-        if($.isNumeric(amount)){
+        if(dlb.isNumeric(amount)){
             if(amount<= 0){
                 amount = 0.01
             }
@@ -378,32 +390,35 @@ const movePage = state => {
 const appendDom = (elem, domStr) => {
 	dlb.byQs(elem).innerHTML = domStr
 }
-const saveCard = (e, type) => {
-	e = e || window.event
+const saveCard = (type = 'list', elem) => {
 	type == 'none' ? (
 		dlb.byId('couponReceiveSum').value = "0",
-		dlb.byId('cpCouponReceiveId').value = "0"
+		dlb.byId('cpCouponReceiveId').value = "0",
+        dlb.byId('cpCouponReceiveType').value = "0",
+        dlb.byId('cpCouponReceiveFull').value = "0"
 	) : (
-		dlb.byId('couponReceiveSum').value = JSON.parse(dlb.byId('carddetail').innerHTML).count,
-		dlb.byId('cpCouponReceiveId').value = JSON.parse(dlb.byId('carddetail').innerHTML).id,
+		dlb.byId('couponReceiveSum').value = JSON.parse(elem.childNodes[1].innerHTML).count,
+		dlb.byId('cpCouponReceiveId').value = JSON.parse(elem.childNodes[1].innerHTML).id,
+        dlb.byId('cpCouponReceiveType').value = JSON.parse(elem.childNodes[1].innerHTML).type,
+        dlb.byId('cpCouponReceiveFull').value = JSON.parse(elem.childNodes[1].innerHTML).fullCount,
 		readPayment(dlb.byId('transactionPrice').value)
 	)
-	console.log(dlb.byId('cpCouponReceiveId').value)
 	movePage('back')
 }
 
 
 const wechatApliy = _ => new Promise((rsl, rej) => {
-    let amount = dlb.byId("platformTransactionAmount").value
-    let openId = dlb.byId("openid").value
-    let qrcode = dlb.byId("qrcode").value
-    let couponReceiveSum = dlb.byId("couponReceiveSum").value
-    let cpCouponReceiveId = dlb.byId("cpCouponReceiveId").value
-    let transactionPrice = dlb.byId("transactionPrice").value
-    let shop = JSON.parse(dlb.byId("shop").value)
-    let isCouponReceiveId = cpCouponReceiveId === '0' ? '2' : '1'
-    let merchantDiscount = dlb.byId('merchantDiscount').value
-    let receivedPrice = transactionPrice - couponReceiveSum
+    let openId = dlb.byId("openid").value,
+        qrcode = dlb.byId("qrcode").value,
+        couponReceiveSum = dlb.byId("couponReceiveSum").value,
+        cpCouponReceiveId = dlb.byId("cpCouponReceiveId").value,
+        transactionPrice = dlb.byId("transactionPrice").value,
+        shop = JSON.parse(dlb.byId("shop").value),
+        amount = dlb.byId("platformTransactionAmount").value,
+        isCouponReceiveId = cpCouponReceiveId === '0' ? '2' : '1',
+        merchantDiscount = dlb.byId('merchantDiscount').value,
+        receivedPrice = transactionPrice - couponReceiveSum
+
     let o = {
 			qrcode,
 			openId,
@@ -493,7 +508,8 @@ const successDom = ({all, cut}) => `<div class = 'success'>
 
 window.onload = function(){
     //光标调用
-    dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
+    // dlb.byQs('.tickets').style.display = Api.IsWeixinOrAlipay() === 'wx' ? 'block' : 'none'
+    dlb.byQs('.tickets').style.display = 'block'
 
     let mark = setInterval((_ => {
         let n = 1
@@ -592,8 +608,8 @@ window.onload = function(){
                     fullAmount = i.fullAmount / 100,
                     discountAmount = i.discountAmount / 100
 
-                html += dlb.byId('transactionPrice').value >= fullAmount ? `<li class='cardItem'>
-                    <span id='carddetail' style="display: none;">${JSON.stringify({id: i.id, count: discountAmount})}</span>
+                html += (fullAmount > discountAmount && dlb.byId('transactionPrice').value >= fullAmount) || (fullAmount == discountAmount && dlb.byId('transactionPrice').value > fullAmount)  ? `<li class='cardItem'>
+                    <span class='carddetail' style="display: none;">${JSON.stringify({id: i.id, count: discountAmount, type: i.couponType, fullCount: fullAmount })}</span>
                     <div class='cardContent'>
                         <div class='cardCount'>
                             <p><span>¥</span>${discountAmount}</p>
@@ -614,12 +630,9 @@ window.onload = function(){
                 </li>` : ''
             }
             appendDom('.cardContainer', html)
-            dlb.addEvent(dlb.byQs('.cardNone'), 'click', e => {
-                e = e || window.event
-                saveCard(e, 'none')
-            })
+            dlb.addEvent(dlb.byQs('.cardNone'), 'click', _ => saveCard('none') )
             for(let i = 0; i < dlb.byQsa('.cardItem').length; i++){
-                dlb.addEvent(dlb.byQsa('.cardItem')[i], 'click', saveCard)
+                dlb.addEvent(dlb.byQsa('.cardItem')[i], 'click', _ => saveCard('list', dlb.byQsa('.cardItem')[i]))
             }
         })
     })
