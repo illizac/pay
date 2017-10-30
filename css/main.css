@@ -230,7 +230,9 @@ body{
     height: .86rem;
     background: #fff;
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
+    -webkit-justify-content: space-between;
     padding: 0 .34rem;
     align-items: center;
 }
@@ -243,6 +245,7 @@ body{
     color: #333;
     padding-left: .28rem;
     flex: 1;
+    -webkit-flex: 1;
 }
 .choose .enter{
     width: .22rem;
@@ -326,8 +329,11 @@ body{
     height: .86rem;
     padding: 0 .3rem;
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
+    -webkit-justify-content: space-between;
     align-items: center;
+    -webkit-align-items: center;
 }
 .cardWrapper .cardNone span{
     font-size: .3rem;
@@ -336,7 +342,9 @@ body{
 .cardWrapper .cardItem{
     height: 2rem;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
 }
 .cardWrapper .cardItem .cardBottom{
     height: .55rem;
@@ -344,9 +352,12 @@ body{
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
-    padding: 0 .3rem;
+    -webkit-justify-content: space-between;
     align-items: center;
+    -webkit-align-items: center;
+    padding: 0 .3rem;
 }
 .cardWrapper .cardItem .cardBottom span{
     font-size: .26rem;
@@ -354,14 +365,20 @@ body{
 }
 .cardWrapper .cardItem .cardContent{
     flex: 1;
+    -webkit-flex: 1;
     display: flex;
+    display: -webkit-flex;
 }
 .cardWrapper .cardItem .cardContent .cardCount{
     width: 1.63rem;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
     justify-content: center;
+    -webkit-justify-content: center;
     align-items: center;
+    -webkit-align-items: center;
 }
 .cardWrapper .cardItem .cardContent .cardCount>p{
     color: red;
@@ -378,9 +395,12 @@ body{
 .cardWrapper .cardItem .cardContent .cardMess{
     flex: 1;
     display: flex;
+    display: -webkit-flex;
     align-items: center;
+    -webkit-align-items: center;
     padding: 0 .3rem;
     justify-content: space-between;
+    -webkit-justify-content: space-between;
     border-left: 5px dotted rgb(241, 241, 241);
 }
 .cardWrapper .cardItem .cardContent .cardMess>div>p{
@@ -400,7 +420,9 @@ body{
 .successMess{
     height: 4.5rem;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
     margin-bottom: .2rem;
     background: #fff;
     border-bottom: .01rem solid rgb(224, 224, 224);
@@ -408,8 +430,11 @@ body{
 }
 .paymess{
     flex: 1;
+    -webkit-flex: 1;
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
+    -webkit-flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -439,6 +464,7 @@ body{
     height: .86rem;
     border-top: .01rem solid rgb(224, 224, 224);
     display: flex;
+    display: -webkit-flex;
     padding: 0 .36rem;
     line-height: .86rem;
 }
