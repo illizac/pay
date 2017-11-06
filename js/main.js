@@ -190,7 +190,7 @@ const keybord = {
             newAm = am
         } else if (num == '0' && am.indexOf(".") < 0 && am.indexOf("0") == 0) {
             newAm = am
-        } else if (num == '.' && am.indexOf(".") < 0 && parseInt(am) < 50000) {
+        } else if (num == '.' && am.indexOf(".") < 0 && parseInt(am) < 5000) {
             newAm = am + num
         } else if (am.indexOf(".") > 0 && (am.length - am.indexOf(".")) > 2) {
             newAm = am
@@ -198,11 +198,11 @@ const keybord = {
             newAm = am
         } else if (am == '0' && num != '.') {
             newAm = num
-        } else if (am.indexOf(".") < 0 && parseInt(am) == 5000 && num != '0') {
+        } else if (am.indexOf(".") < 0 && parseInt(am) == 500 && num != '0') {
             newAm = am
-        } else if (am.indexOf(".") < 0 && parseInt(am) > 5000) {
+        } else if (am.indexOf(".") < 0 && parseInt(am) > 500) {
             newAm = am
-        } else if (am.indexOf(".") < 0 && parseInt(am) <= 50000 && am.length >= 5 && num != '.') {
+        } else if (am.indexOf(".") < 0 && parseInt(am) <= 5000 && am.length >= 4 && num != '.') {
             newAm = am
         } else {
             newAm = am + num
@@ -417,7 +417,7 @@ const wechatApliy = _ => new Promise((rsl, rej) => {
         amount = dlb.byId("platformTransactionAmount").value,
         isCouponReceiveId = cpCouponReceiveId === '0' ? '2' : '1',
         merchantDiscount = dlb.byId('merchantDiscount').value,
-        receivedPrice = (Number(transactionPrice) * 100 - Number(couponReceiveSum) * 100) / 100
+        receivedPrice = parseFloat((Number(transactionPrice) - Number(couponReceiveSum)).toFixed(2))
 
     let o = {
 			qrcode,
@@ -572,7 +572,7 @@ window.onload = function(){
                 n++
             }
         })(), 580)
-        
+
         //当页面文档加载完成之后弹出键盘
         dlb.addEvent(document, 'DOMContentLoaded', _ => {
             var html = document.documentElement
