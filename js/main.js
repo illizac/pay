@@ -1,6 +1,8 @@
 import '../css/main.css'
 
-const baseUrl = "http://pay.qdxiao2.com"
+// const baseUrl = "http://pay.qdxiao2.com"
+const baseUrl = 'http://m.zanzanmd.cn'
+
 const dlb = {
     byName: name => document.getElementsByName(name),
     byId: id => document.getElementById(id),
