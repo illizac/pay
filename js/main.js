@@ -297,7 +297,8 @@ const backClick = e => {
     }
     dlb.byId("amount").value = newAmount
     dlb.byQs('.payment-cont-num').innerHTML = newAmount
-    dlb.isNumeric(amount) && newAmount>0 ? readPayment(newAmount) : dlb.byId("platformTransactionAmount").value = 0
+    // dlb.isNumeric(amount) && newAmount > 0 ? readPayment(newAmount) : dlb.byId("platformTransactionAmount").value = 0
+    dlb.isNumeric(amount) ? readPayment(newAmount) : dlb.byId("platformTransactionAmount").value = 0
     speFunEnd()     //输入金额临界值触发的事件
 }
 
