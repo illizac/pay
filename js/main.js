@@ -533,7 +533,7 @@ window.onload = function(){
     Api.getShopInfo({
         qrcode: param.q
     }).then(data => {
-        dlb.byId("merchantDiscount").value = data.platformDiscount
+        dlb.byId("merchantDiscount").value = data.platformDiscount && data.platformDiscount != '0' && data.platformDiscount != null ? data.platformDiscount : 10
         dlb.byId("shop").value = JSON.stringify(data)
 
         Api.IsWeixinOrAlipay() === 'aliy' ? 
