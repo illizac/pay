@@ -1,3 +1,4 @@
+import '../css/weui.min.css'
 import '../css/main.css'
 
 // const baseUrl = "http://pay.qdxiao2.com"
@@ -327,7 +328,7 @@ const calamount = (o, c, d) => parseFloat( (parseFloat(o - c) * d / 10).toFixed(
 const Api = (_ => {
 	const api = function(){}
 
-	const baseUrl = 'http://pay.qdxiao2.com'
+    const baseUrl = 'http://pay.zanzanmd.cn'
 
 	const handleProxyPath = (path, success, param, type) => {
         let obj = {
