@@ -413,10 +413,14 @@ body{
     color: rgb(83, 83, 83);
 }
 
+
+
+
 .success{
     width: 100%;
     height: 100%;
-    background: rgb(246,246,246);
+    // background: rgb(246,246,246);
+    background: #fff;
 }
 .successMess{
     height: 4.5rem;
@@ -426,7 +430,7 @@ body{
     -webkit-flex-direction: column;
     margin-bottom: .2rem;
     background: #fff;
-    border-bottom: .01rem solid rgb(224, 224, 224);
+    // border-bottom: .01rem solid rgb(224, 224, 224);
     font-size: .2rem;
 }
 .paymess{
@@ -466,8 +470,6 @@ body{
 .shopCut{
     height: .86rem;
     border-top: .01rem solid rgb(224, 224, 224);
-    display: flex;
-    display: -webkit-flex;
     padding: 0 .36rem;
     line-height: .86rem;
 }
