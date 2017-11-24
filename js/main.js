@@ -711,6 +711,7 @@ window.onload = function(){
                         }
                         let aliyRes = _ => {
                             res.resultCode == '9000' ? (
+                                
                                 clearInterval(marker),
                                 dlb.byQs('.page').innerHTML = successDom({
                                     all: dlb.byId("transactionPrice").value,

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            background-color: #ededed;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        .charts-left {
+            flex: 4;
+            height: 1000px;
+            margin-right: 10px;
+        }
+
+        .charts-right {
+            flex: 6;
+            height: 1000px;
+        }
+
+        .clicks {
+            border-radius: 10px;
+            background-color: #fff;
+            flex: 1;
+            height: 200px;
+            padding:20px;
+        }
+
+        .click-total {
+            height: 350px;
+            margin-bottom: 10px;
+        }
+
+        .click-main {
+            height: 550px;
+        }
+
+        .click-adver {
+            margin-bottom: 10px;
+            height: 450px;
+        }
+
+        .click-position {
+            height: 450px;
+        }
+        .clicks-title{
+            text-align:center;
+            font-size:18px;
+            color:#3eba6c;
+        }
+        .total-cont{
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            width:200px;
+            height:200px;
+            line-height: 200px;
+            margin: auto;
+            margin-top:50px;
+            border-radius: 100%;
+            background-color: #3eba6c;
+            color:#fff;
+            font-size:30px;
+            text-align:center;
+        }
+    </style>
+    
+</head>
+<body>
+<div class="wrapper">
+    <div class="charts-left">
+        <div class="clicks click-total">
+            <div class="clicks-title">总点击量</div>
+            <div class="total-cont">8888</div>
+        </div>
+
+        <div class="clicks click-main">
+
+        </div>
+
+    </div>
+    <div class="charts-right">
+
+        <div class="clicks click-adver">
+
+            <div id="mountNode"></div>
+
+        </div>
+
+        <div class="clicks click-position">
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="https://gw.alipayobjects.com/as/g/datavis/assets/1.0.5/g2/3.0.0/g2.min.js"></script>
+<script src="https://gw.alipayobjects.com/as/g/datavis/assets/1.0.5/data-set/0.6.2/data-set.min.js"></script>
+<script type="text/javascript">
+    const data = [
+        { year: '1951 年', sales: 38 },
+        { year: '1952 年', sales: 52 },
+        { year: '1956 年', sales: 61 },
+        { year: '1957 年', sales: 145 },
+        { year: '1958 年', sales: 48 },
+        { year: '1959 年', sales: 38 },
+        { year: '1960 年', sales: 38 },
+        { year: '1962 年', sales: 38 },
+    ]
+
+    const clickNum = new G2.Chart({
+        container: 'mountNode',
+        forceFit: true,
+        height: 450,
+        padding: 50
+    })
+    clickNum.source(data)
+    clickNum.legend(false)
+    clickNum.interval().position(['year', 'sales']).label('sales').color('year').select(false)
+    clickNum.render()
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
