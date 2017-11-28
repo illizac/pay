@@ -1,9 +1,6 @@
 import '../css/weui.min.css'
 import '../css/main.css'
 
-// const baseUrl = "http://pay.qdxiao2.com"
-const baseUrl = 'http://pay.zanzanmd.cn'
-
 const dlb = {
     byName: name => document.getElementsByName(name),
     byId: id => document.getElementById(id),
@@ -346,6 +343,17 @@ const Api = (_ => {
         // Object.assign(, path === '/pay/rest/v1/createOrder' ? {header: 'application/json'} : {})
     }
 
+    // const baseUrl = 'http://192.168.1.106:8095/proxy'
+    // const handleProxyPath = (path, success, param, type) => {
+    //     let obj = {
+    //         url: `${baseUrl}`,
+    //         type,
+    //         data: {type, path},
+    //         success
+    //     }
+    //     return obj
+    // }
+
 	api.prototype = {
 		IsWeixinOrAlipay: _ => {
 			let userAgent = navigator.userAgent.toLowerCase()
@@ -374,7 +382,23 @@ const Api = (_ => {
 		createOrder: param => new Promise((rsl, rej) => {
 			showToast('支付中')
 			dlb.ajax(handleProxyPath(`/pay/rest/v1/createOrder`, data => rsl(data), param, 'post'))
-		}).then(data => JSON.parse(data))
+		}).then(data => JSON.parse(data)),
+        //获取广告列表
+        getAdvList: _ => new Promise((rsl, rej) => {
+            showToast('加载中')
+            dlb.ajax(handleProxyPath(`/ad/adList/1`, data => rsl(data), {}, 'get'))
+        }).then(data => {
+            setTimeout(hideToast, 500)
+            return JSON.parse(data)
+        }),
+        //点击广告次数
+        advclick: id => new Promise((rsl, rej) => {
+            showToast('加载中')
+            dlb.ajax(handleProxyPath(`/ad/c/${id}`, data => rsl(data), {}, 'get'))
+        }).then(data => {
+            hideToast()
+            return ''
+        })
 	}
 	return new api()
 })()
@@ -497,7 +521,15 @@ const fmoney = (s = s || '0', n = 2) => {
     return t.split("").reverse().join("") + "." + r;  
 }
 
-const successDom = ({all, cut}) => `<div class = 'success'>
+const prevLink = o => {
+    Api.advclick(o.id).then(_ => {
+        if(o.href && o.href != ''){
+            window.location = o.href
+        }
+    })
+}
+
+const successDom = ({all, cut, advList = [] }) => `<div class = 'success'>
     <div class="successMess">
         <div class='paymess'>
             <img src="${successImg}" class='payimg'>
@@ -510,11 +542,39 @@ const successDom = ({all, cut}) => `<div class = 'success'>
             <span class='cutnum' style='float: right;'>${fmoney(cut-all)}</span>
         </div>
     </div>
-    <a href='${successLink}'>
-        <img style="width: 100%; display: block;" src="${successAd}" >
-    </a>
-</div>`
+    <div class="adv">
+        <p class="advTitle">
+            <span class="notice"></span>
+            <span class="titleText">更多优惠在这里</span>
+        </p>
+        <div class='advContainer'>${advList.map(val => `<div class="advContent">
+                    <img src="${val[0].url}" class='advimg'>
+                    <p class="advtext">${val[0].title}</p>
+                    <a class="advlink" >立即查看</a>
+        </div>`).join('')}</div>
+    </div> 
+    <span class='bottom'></span>
+</div>
+`
+// <a href='${successLink}'>
+//     <img style="width: 100%; display: block;" src="${successAd}" >
+// </a>
 
+// window.onload = function(){
+//     hideToast()
+
+//     Api.getAdvList().then(data => {
+//         dlb.byQs('.container').innerHTML = successDom({
+//             all: 1,
+//             cut: 0.5,
+//             advList: data.data || []
+//         })
+//         for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
+//             dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+//         }
+//     })
+    
+// }
 
 window.onload = function(){
     //初始化金额
@@ -693,9 +753,21 @@ window.onload = function(){
                            switch(res['err_msg']){
                             case 'get_brand_wcpay_request:ok':  
                                 clearInterval(marker)
-                                dlb.byQs('.page').innerHTML = successDom({
-                                    all: dlb.byId("transactionPrice").value,
-                                    cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
+
+                                // dlb.byQs('.page').innerHTML = successDom({
+                                //     all: dlb.byId("transactionPrice").value,
+                                //     cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
+                                // })
+
+                                Api.getAdvList().then(data => {
+                                    dlb.byQs('.container').innerHTML = successDom({
+                                        all: dlb.byId("transactionPrice").value,
+                                        cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+                                        advList: data.data || []
+                                    })
+                                    for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
+                                        dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+                                    }
                                 })
                                 break
                             case 'get_brand_wcpay_request:cancel': 

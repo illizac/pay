@@ -3,7 +3,9 @@ var http = require('http')
 	url = require('url')
 
 let opt = {
-	hostname: 'auth.qdxiao2.com'
+	// hostname: 'auth.qdxiao2.com'
+	hostname: '192.168.1.101',
+	port: '8080'
 }
 
 const getParamHandler = param => {
@@ -28,7 +30,7 @@ exports.proxy = (res, param, header) => new Promise((reslove, reject) => {
 		path = param.path
 	delete param.type
 	delete param.path
-	path = method === 'POST' ? path : `${param.path}${getParamHandler(param)}`
+	path = method === 'POST' ? path : `${path}${getParamHandler(param)}`
 	req = http.request(Object.assign({}, opt, { method, path }, {headers: Object.assign({'user-agent': header['user-agent']}, path === '/pay/rest/v1/createOrder' ? {'Content-Type' : 'application/json'} : {})}), res => {
 			console.log("Got response: " + res.statusCode)
 			res.on('data', d => {
