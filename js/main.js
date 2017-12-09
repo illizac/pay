@@ -529,7 +529,7 @@ const prevLink = o => {
     })
 }
 
-const successDom = ({all, cut, advList = [] }) => `<div class = 'success'>
+const successDom = ({ all, cut, advList }) => `<div class = 'success'>
     <div class="successMess">
         <div class='paymess'>
             <img src="${successImg}" class='payimg'>
@@ -565,6 +565,15 @@ const successDom = ({all, cut, advList = [] }) => `<div class = 'success'>
 //     <img style="width: 100%; display: block;" src="${successAd}" >
 // </a>
 
+const getSuccess = _ => {
+    clearInterval(marker)
+        dlb.byQs('.page').innerHTML = successDom({
+            all: dlb.byId("transactionPrice").value,
+            cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+        advList: []
+    })
+}
+
 // window.onload = function(){
 //     hideToast()
 
@@ -581,7 +590,20 @@ const successDom = ({all, cut, advList = [] }) => `<div class = 'success'>
     
 // }
 
+let u = Api.IsWeixinOrAlipay()
+if(u  == 'aliy'){
+    AlipayJSBridge.call('hideOptionMenu')
+}
+if(u == 'wx'){
+    document.addEventListener('WeixinJSBridgeReady',
+    function onBridgeReady() {
+        WeixinJSBridge.call('hideOptionMenu');
+    })
+}
 window.onload = function(){
+
+
+
     //初始化金额
     dlb.byQs('.payment-cont-num').innerHTML = ''
     dlb.byId("amount").value = ''
@@ -757,24 +779,14 @@ window.onload = function(){
                         let wxRes = _ => {
                            switch(res['err_msg']){
                             case 'get_brand_wcpay_request:ok':  
-                                clearInterval(marker)
 
+                                clearInterval(marker)
                                 dlb.byQs('.page').innerHTML = successDom({
                                     all: dlb.byId("transactionPrice").value,
-                                    cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
+                                    cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+                                    advList: []
                                 })
 
-                                // Api.getAdvList().then(data => {
-                                //     dlb.byQs('.container').innerHTML = successDom({
-                                //         all: dlb.byId("transactionPrice").value,
-                                //         cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
-                                //         advList: data.data || []
-                                //     })
-                                //     for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
-                                //         dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
-                                //     }
-                                // })
-                                
                                 break
                             case 'get_brand_wcpay_request:cancel': 
                                 fail('支付取消')
@@ -793,8 +805,10 @@ window.onload = function(){
                                 clearInterval(marker),
                                 dlb.byQs('.page').innerHTML = successDom({
                                     all: dlb.byId("transactionPrice").value,
-                                    cut: dlb.byId("platformTransactionAmount").value
+                                    cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+                                    advList: []
                                 })
+
                             ) : fail('支付失败')
                         }
                         let useagent = Api.IsWeixinOrAlipay()
@@ -805,6 +819,17 @@ window.onload = function(){
 
     })
 }
+
+// Api.getAdvList().then(data => {
+//     dlb.byQs('.container').innerHTML = successDom({
+//         all: dlb.byId("transactionPrice").value,
+//         cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+//         advList: data.data || []
+//     })
+//     for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
+//         dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+//     }
+// })
 
 
 

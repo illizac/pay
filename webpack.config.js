@@ -35,9 +35,9 @@ module.exports = {
 		]
 	},
 	plugins: [
-		// new htmlPlugin({
-		// 	template: resolve(__dirname, './index.html')
-		// }),
+		new htmlPlugin({
+			template: resolve(__dirname, './index.html')
+		}),
 		new webpack.LoaderOptionsPlugin({
 		    minimize: true
 		}),
