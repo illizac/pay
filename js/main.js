@@ -343,7 +343,7 @@ const Api = (_ => {
         // Object.assign(, path === '/pay/rest/v1/createOrder' ? {header: 'application/json'} : {})
     }
 
-    // const baseUrl = 'http://192.168.1.106:8095/proxy'
+    // const baseUrl = 'http://192.168.1.103:8095/proxy'
     // const handleProxyPath = (path, success, param, type) => {
     //     let obj = {
     //         url: `${baseUrl}`,
@@ -542,20 +542,25 @@ const successDom = ({all, cut, advList = [] }) => `<div class = 'success'>
             <span class='cutnum' style='float: right;'>${fmoney(cut-all)}</span>
         </div>
     </div>
-    <div class="adv">
-        <p class="advTitle">
-            <span class="notice"></span>
-            <span class="titleText">更多优惠在这里</span>
-        </p>
-        <div class='advContainer'>${advList.map(val => `<div class="advContent">
-                    <img src="${val[0].url}" class='advimg'>
-                    <p class="advtext">${val[0].title}</p>
-                    <a class="advlink" >立即查看</a>
-        </div>`).join('')}</div>
-    </div> 
-    <span class='bottom'></span>
+    <a href='${successLink}'>
+        <img style="width: 100%; display: block;" src="${successAd}" >
+    </a>
 </div>
 `
+
+// <div class="adv">
+//         <p class="advTitle">
+//             <span class="notice"></span>
+//             <span class="titleText">更多优惠在这里</span>
+//         </p>
+//         <div class='advContainer'>${advList.map(val => `<div class="advContent">
+//                     <img src="${val[0].url}" class='advimg'>
+//                     <p class="advtext">${val[0].title}</p>
+//                     <a class="advlink" >立即查看</a>
+//         </div>`).join('')}</div>
+//     </div> 
+//     <span class='bottom'></span>
+
 // <a href='${successLink}'>
 //     <img style="width: 100%; display: block;" src="${successAd}" >
 // </a>
@@ -754,21 +759,22 @@ window.onload = function(){
                             case 'get_brand_wcpay_request:ok':  
                                 clearInterval(marker)
 
-                                // dlb.byQs('.page').innerHTML = successDom({
-                                //     all: dlb.byId("transactionPrice").value,
-                                //     cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
-                                // })
-
-                                Api.getAdvList().then(data => {
-                                    dlb.byQs('.container').innerHTML = successDom({
-                                        all: dlb.byId("transactionPrice").value,
-                                        cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
-                                        advList: data.data || []
-                                    })
-                                    for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
-                                        dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
-                                    }
+                                dlb.byQs('.page').innerHTML = successDom({
+                                    all: dlb.byId("transactionPrice").value,
+                                    cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
                                 })
+
+                                // Api.getAdvList().then(data => {
+                                //     dlb.byQs('.container').innerHTML = successDom({
+                                //         all: dlb.byId("transactionPrice").value,
+                                //         cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+                                //         advList: data.data || []
+                                //     })
+                                //     for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
+                                //         dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+                                //     }
+                                // })
+                                
                                 break
                             case 'get_brand_wcpay_request:cancel': 
                                 fail('支付取消')
