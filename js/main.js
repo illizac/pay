@@ -323,12 +323,13 @@ const Api = (_ => {
     // const baseUrl = 'http://pay.zanzanmd.cn'
     const baseUrl = 'http://pay.qdxiao2.com'
 
-	const handleProxyPath = (path, success, param, type) => {
+	const handleProxyPath = (path, success, param, type, cbName = false) => {
         let obj = {
             url: `${baseUrl}${path}`,
             type,
             data: param,
-            success
+            success,
+            cbName
         }
         path === '/pay/rest/v1/createOrder' ? obj.header = 'application/json' : null
         return obj
@@ -378,7 +379,7 @@ const Api = (_ => {
         //获取广告列表
         getAdvList: _ => new Promise((rsl, rej) => {
             // showToast('加载中')
-            dlb.ajax(handleProxyPath(`/ad/adList/1`, data => rsl(data), {}, 'get'))
+            dlb.jsonp(handleProxyPath(`/ad/adList/1`, data => rsl(data), {}, 'get', 'jsonpCallback'))
         }).then(data => {
             // setTimeout(hideToast, 500)
             return JSON.parse(data)
@@ -386,7 +387,7 @@ const Api = (_ => {
         //点击广告次数
         advclick: id => new Promise((rsl, rej) => {
             showToast('加载中')
-            dlb.ajax(handleProxyPath(`/ad/c/${id}`, data => rsl(data), {}, 'get'))
+            dlb.jsonp(handleProxyPath(`/ad/c/${id}`, data => rsl(data), {}, 'get', 'jsonpCallback'))
         }).then(data => {
             hideToast()
             return ''
