@@ -377,10 +377,10 @@ const Api = (_ => {
 		}).then(data => JSON.parse(data)),
         //获取广告列表
         getAdvList: _ => new Promise((rsl, rej) => {
-            showToast('加载中')
+            // showToast('加载中')
             dlb.ajax(handleProxyPath(`/ad/adList/1`, data => rsl(data), {}, 'get'))
         }).then(data => {
-            setTimeout(hideToast, 500)
+            // setTimeout(hideToast, 500)
             return JSON.parse(data)
         }),
         //点击广告次数
@@ -534,7 +534,7 @@ const prevLink = o => {
     })
 }
 
-const successDom = ({ all, cut, advList }) => `<div class = 'success'>
+const successDom = ({ all, cut }) => `<div class = 'success'>
     <div class="successMess">
         <div class='paymess'>
             <img src="${successImg}" class='payimg'>
@@ -547,20 +547,21 @@ const successDom = ({ all, cut, advList }) => `<div class = 'success'>
             <span class='cutnum' style='float: right;'>${fmoney(cut-all)}</span>
         </div>
     </div>
-    <div class="adv">
-        <p class="advTitle">
-            <span class="notice"></span>
-            <span class="titleText">更多优惠在这里</span>
-        </p>
-        <div class='advContainer'>${advList.map(val => `<div class="advContent">
-                    <img src="${val[0].url}" class='advimg'>
-                    <p class="advtext">${val[0].title}</p>
-                    <a class="advlink" >立即查看</a>
-        </div>`).join('')}</div>
-    </div> 
-    <span class='bottom'></span>
 </div>
 `
+
+const advDone = ({ advList }) =>  `<div class="adv">
+    <p class="advTitle">
+        <span class="notice"></span>
+        <span class="titleText">更多优惠在这里</span>
+    </p>
+    <div class='advContainer'>${advList.map(val => `<div class="advContent">
+                <img src="${val[0].url}" class='advimg'>
+                <p class="advtext">${val[0].title}</p>
+                <a class="advlink" >立即查看</a>
+    </div>`).join('')}</div>
+</div> 
+<span class='bottom'></span>`
 
 // <div class="adv">
 //         <p class="advTitle">
@@ -583,16 +584,13 @@ const successDom = ({ all, cut, advList }) => `<div class = 'success'>
 const payDone = _ => {
     clearInterval(marker)
 
-    // dlb.byQs('.page').innerHTML = successDom({
-    //     all: dlb.byId("transactionPrice").value,
-    //     cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
-    //     advList: []
-    // })
+    dlb.byQs('.page').innerHTML = successDom({
+        all: dlb.byId("transactionPrice").value,
+        cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
+    })
 
     Api.getAdvList().then(data => {
-        dlb.byQs('.container').innerHTML = successDom({
-            all: dlb.byId("transactionPrice").value,
-            cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value,
+        dlb.byQs('.success').innerHTML += advDone({
             advList: data.data || []
         })
         for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
