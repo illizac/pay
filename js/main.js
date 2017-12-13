@@ -322,8 +322,8 @@ const Api = (_ => {
 
     // const baseUrl = 'http://pay.zanzanmd.cn'
     const baseUrl = 'http://pay.qdxiao2.com'
-    // const advUrl = 'http://zzad.qdxiao2.com'
-    const advUrl = 'http://192.168.1.111:8080'
+    const advUrl = 'http://zzad.qdxiao2.com'
+    // const advUrl = 'http://192.168.1.111:8080'
 
 	const handleProxyPath = (path, success, param, type, url = baseUrl, cbName = false) => {
         let obj = {
