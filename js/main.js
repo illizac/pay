@@ -553,40 +553,27 @@ const successDom = ({ all, cut }) => `<div class = 'success'>
 </div>
 `
 
-const advDone = ({ advList }) =>  `<div class="adv">
-    <p class="advTitle">
-        <span class="notice"></span>
-        <span class="titleText">更多优惠在这里</span>
-    </p>
-    <div class='advContainer'>${advList.map(val => `<div class="advContent">
-                <img src="${val[0].url}" class='advimg'>
-                <p class="advtext">${val[0].title}</p>
-                <a class="advlink" >立即查看</a>
-    </div>`).join('')}</div>
-</div> 
-<span class='bottom'></span>`
+// const advDone = ({ advList }) =>  `<div class="adv">
+//     <p class="advTitle">
+//         <span class="notice"></span>
+//         <span class="titleText">更多优惠在这里</span>
+//     </p>
+//     <div class='advContainer'>${advList.map(val => `<div class="advContent">
+//                 <img src="${val[0].url}" class='advimg'>
+//                 <p class="advtext">${val[0].title}</p>
+//                 <a class="advlink" >立即查看</a>
+//     </div>`).join('')}</div>
+// </div> 
+// <span class='bottom'></span>`
 
-// <div class="adv">
-//         <p class="advTitle">
-//             <span class="notice"></span>
-//             <span class="titleText">更多优惠在这里</span>
-//         </p>
-//         <div class='advContainer'>${advList.map(val => `<div class="advContent">
-//                     <img src="${val[0].url}" class='advimg'>
-//                     <p class="advtext">${val[0].title}</p>
-//                     <a class="advlink" >立即查看</a>
-//         </div>`).join('')}</div>
-//     </div> 
-//     <span class='bottom'></span>
-
-// <a href='${successLink}'>
-//     <img style="width: 100%; display: block;" src="${successAd}" >
-// </a>
+const advDone = ({ advList }) => `<a class="advlink" style='width: 100%;display:block;'>
+    <img style="width: 100%; display: block;" src="${advList[0][0].url}" >
+</a>`
 
 
 const payDone = _ => {
     clearInterval(marker)
-    
+
     dlb.byQs('.container').innerHTML = successDom({
         all: dlb.byId("transactionPrice").value,
         cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
@@ -797,9 +784,7 @@ window.onload = function(){
                         let wxRes = _ => {
                            switch(res['err_msg']){
                             case 'get_brand_wcpay_request:ok':  
-
                                 payDone()
-
                                 break
                             case 'get_brand_wcpay_request:cancel': 
                                 fail('支付取消')
@@ -823,6 +808,7 @@ window.onload = function(){
 
     })
 }
+
 
 
 
