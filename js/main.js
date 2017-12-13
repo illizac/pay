@@ -322,10 +322,12 @@ const Api = (_ => {
 
     // const baseUrl = 'http://pay.zanzanmd.cn'
     const baseUrl = 'http://pay.qdxiao2.com'
+    // const advUrl = 'http://zzad.qdxiao2.com'
+    const advUrl = 'http://192.168.1.111:8080'
 
-	const handleProxyPath = (path, success, param, type, cbName = false) => {
+	const handleProxyPath = (path, success, param, type, url = baseUrl, cbName = false) => {
         let obj = {
-            url: `${baseUrl}${path}`,
+            url: `${url}${path}`,
             type,
             data: param,
             success,
@@ -379,15 +381,15 @@ const Api = (_ => {
         //获取广告列表
         getAdvList: _ => new Promise((rsl, rej) => {
             // showToast('加载中')
-            dlb.jsonp(handleProxyPath(`/ad/adList/1`, data => rsl(data), {}, 'get', 'jsonpCallback'))
+            dlb.jsonp(handleProxyPath(`/ad/jsonp/adList/1`, data => rsl(data), {}, 'get', advUrl, 'jsonpCallback'))
         }).then(data => {
             // setTimeout(hideToast, 500)
-            return JSON.parse(data)
+            return data
         }),
         //点击广告次数
         advclick: id => new Promise((rsl, rej) => {
             showToast('加载中')
-            dlb.jsonp(handleProxyPath(`/ad/c/${id}`, data => rsl(data), {}, 'get', 'jsonpCallback'))
+            dlb.jsonp(handleProxyPath(`/ad/jsonp/c/${id}`, data => rsl(data), {}, 'get', advUrl, 'jsonpCallback'))
         }).then(data => {
             hideToast()
             return ''
@@ -584,8 +586,8 @@ const advDone = ({ advList }) =>  `<div class="adv">
 
 const payDone = _ => {
     clearInterval(marker)
-
-    dlb.byQs('.page').innerHTML = successDom({
+    
+    dlb.byQs('.container').innerHTML = successDom({
         all: dlb.byId("transactionPrice").value,
         cut: 0 < dlb.byId("platformTransactionAmount").value < 0.01 ? 0.01 : dlb.byId("platformTransactionAmount").value
     })
@@ -599,6 +601,7 @@ const payDone = _ => {
         }
     })
 }
+
 
 
 
@@ -820,6 +823,7 @@ window.onload = function(){
 
     })
 }
+
 
 
 

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/illizac/pay#readme",
   "dependencies": {
+    "jquery": "^3.2.1",
     "webpack": "^3.6.0"
   },
   "devDependencies": {
