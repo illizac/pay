@@ -582,19 +582,21 @@ const payDone = _ => {
     })
 
     Api.getAdvList().then(data => {
-        if(data.data[0][0].type == '3'){
-            let inner = dlb.byQs('.success').innerHTML
-            dlb.byQs('.success').innerHTML = advDoneFrame({ advList: data.data || [] }) + inner
+        if(data.data[0]){
+            if(data.data[0][0].type == '3'){
+                let inner = dlb.byQs('.success').innerHTML
+                dlb.byQs('.success').innerHTML = advDoneFrame({ advList: data.data || [] }) + inner
 
-            dlb.addEvent(dlb.byQs('.iframeD'), 'load', _ => dlb.byQs('.iframeD').style.display = 'block')
+                dlb.addEvent(dlb.byQs('.iframeD'), 'load', _ => dlb.byQs('.iframeD').style.display = 'block')
 
-        }else{
-            dlb.byQs('.success').innerHTML += advDone({
-                advList: data.data || []
-            })
-        }
-        for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
-            dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+            }else{
+                dlb.byQs('.success').innerHTML += advDone({
+                    advList: data.data || []
+                })
+            }
+            for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
+                dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
+            }
         }
     })
 }
