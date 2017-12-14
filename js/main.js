@@ -320,10 +320,10 @@ const calamount = (o, c, d) => parseFloat( (parseFloat(o - c) * d / 10).toFixed(
 const Api = (_ => {
 	const api = function(){}
 
-    // const baseUrl = 'http://pay.zanzanmd.cn'
-    const baseUrl = 'http://pay.qdxiao2.com'
-    const advUrl = 'http://zzad.qdxiao2.com'
-    // const advUrl = 'http://192.168.1.111:8080'
+    const baseUrl = 'http://pay.zanzanmd.cn'
+    // const baseUrl = 'http://pay.qdxiao2.com'
+    // const advUrl = 'http://zzad.qdxiao2.com'
+    const advUrl = 'http://zzad.zanzanmd.cn'
 
 	const handleProxyPath = (path, success, param, type, url = baseUrl, cbName = false) => {
         let obj = {
@@ -570,6 +570,8 @@ const advDone = ({ advList }) => `<a class="advlink" style='width: 100%;display:
     <img style="width: 100%; display: block;" src="${advList[0][0].url}" >
 </a>`
 
+const advDoneFrame = ({ advList }) => `<iframe src='${advList[0][0].href}' style='width: 100%;height: 100%;border: none;display: none' class='iframeD'></iframe>`
+
 
 const payDone = _ => {
     clearInterval(marker)
@@ -580,9 +582,17 @@ const payDone = _ => {
     })
 
     Api.getAdvList().then(data => {
-        dlb.byQs('.success').innerHTML += advDone({
-            advList: data.data || []
-        })
+        if(data.data[0][0].type == '3'){
+            let inner = dlb.byQs('.success').innerHTML
+            dlb.byQs('.success').innerHTML = advDoneFrame({ advList: data.data || [] }) + inner
+
+            dlb.addEvent(dlb.byQs('.iframeD'), 'load', _ => dlb.byQs('.iframeD').style.display = 'block')
+
+        }else{
+            dlb.byQs('.success').innerHTML += advDone({
+                advList: data.data || []
+            })
+        }
         for(let i = 0; i < dlb.byQsa('.advlink').length; i++){
             dlb.addEvent(dlb.byQsa('.advlink')[i], 'click', _ => prevLink(data.data[i] && data.data[i][0] ? data.data[i][0] : '' ) )
         }
@@ -808,6 +818,7 @@ window.onload = function(){
 
     })
 }
+
 
 
 
